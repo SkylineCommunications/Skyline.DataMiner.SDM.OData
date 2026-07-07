@@ -39,6 +39,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public SdmObjectReference<Person> Mother { get; set; }
 
 		public SdmObjectReference<Person> Father { get; set; }
+
+		public GrandParents GrandParents { get; set; }
 	}
 
 	public class ExternalIdentifier
@@ -46,6 +48,14 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public string ExternalID { get; set; }
 
 		public string ExternalName { get; set; }
+	}
+
+	public class GrandParents
+	{
+		public SdmObjectReference<Person> MaternalGrandMother { get; set; }
+		public SdmObjectReference<Person> MaternalGrandFather { get; set; }
+		public SdmObjectReference<Person> PaternalGrandMother { get; set; }
+		public SdmObjectReference<Person> PaternalGrandFather { get; set; }
 	}
 
 	public static class PersonExposers
@@ -66,6 +76,14 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			public static readonly CollectionExposer<Person, string> ExternalID = new CollectionExposer<Person, string>((obj) => obj.ExternalIdentifiers.Where(x => x.ExternalID is not null).Select(x => x.ExternalID), "ExternalIdentifiers.ExternalID");
 			public static readonly CollectionExposer<Person, string> ExternalName = new CollectionExposer<Person, string>((obj) => obj.ExternalIdentifiers.Where(x => x.ExternalID is not null).Select(x => x.ExternalName), "ExternalIdentifiers.ExternalName");
+		}
+
+		public static class GrandParents
+		{
+			public static readonly Exposer<Person, SdmObjectReference<Person>> MaternalGrandMother = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.MaternalGrandMother, "GrandParents.MaternalGrandMother");
+			public static readonly Exposer<Person, SdmObjectReference<Person>> MaternalGrandFather = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.MaternalGrandFather, "GrandParents.MaternalGrandFather");
+			public static readonly Exposer<Person, SdmObjectReference<Person>> PaternalGrandMother = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.PaternalGrandMother, "GrandParents.PaternalGrandMother");
+			public static readonly Exposer<Person, SdmObjectReference<Person>> PaternalGrandFather = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.PaternalGrandFather, "GrandParents.PaternalGrandFather");
 		}
 	}
 
@@ -156,6 +174,36 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 
 			// Assert
 			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow("Person 001")]
+		public void SubProperty_Resolves_To_RootProperty_With_Matching_Name(string identifier)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.GrandParents.MaternalGrandFather.Equal(new SdmObjectReference<Person>(identifier));
+			var odataFilter = $"GrandParents/MaternalGrandFather eq '{identifier}'";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		public void SubProperty_Without_RootProperty_Match_Throws()
+		{
+			// Arrange
+			var odataFilter = "Mother/ExternalName eq 'Andi Tamer'";
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
 		}
 
 		[TestMethod]
@@ -577,6 +625,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public void Filter_ExecuteInMemory_Returns_Matching_People()
 		{
 			// Arrange
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
 			var odataFilter = "Age gt 30";
 			var translator = new ODataSdmTranslator<Person>();
 

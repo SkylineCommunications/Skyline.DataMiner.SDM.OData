@@ -134,13 +134,13 @@ namespace Skyline.DataMiner.SDM.OData
 			var methodName = _token.Text;
 			Next(); // Consume the method name
 
-			if(_token.Type != ODataTokenType.LeftParenthesis)
+			if (_token.Type != ODataTokenType.LeftParenthesis)
 			{
 				throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Method call should start with an open parenthesis '('.");
 			}
 
 			Next(); // Consume '('
-			if(_token.Type != ODataTokenType.LamdaParameter)
+			if (_token.Type != ODataTokenType.LamdaParameter)
 			{
 				throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Method call should start with a variable name.");
 			}
@@ -148,7 +148,7 @@ namespace Skyline.DataMiner.SDM.OData
 			var variable = new PropertyNode(_token.Text, null);
 			Next(); // Consume the variable name
 
-			if(_token.Type != ODataTokenType.Colon)
+			if (_token.Type != ODataTokenType.Colon)
 			{
 				throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. After a variable declaration there should be a colon ':'.");
 			}
@@ -156,7 +156,7 @@ namespace Skyline.DataMiner.SDM.OData
 			Next(); // Consume ':'
 			var body = ParseOr(null);
 
-			if(_token.Type != ODataTokenType.RightParenthesis)
+			if (_token.Type != ODataTokenType.RightParenthesis)
 			{
 				throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Missing closing brace ')'");
 			}
@@ -214,7 +214,7 @@ namespace Skyline.DataMiner.SDM.OData
 						continue;
 					}
 
-					if(_token.Type == ODataTokenType.Method)
+					if (_token.Type == ODataTokenType.Method)
 					{
 						return ParseMethodCall(left, node);
 					}
@@ -243,10 +243,12 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				string txt = _token.Text.Replace(",", ".");
 				var type = ODataPrimitiveType.Null;
+				var success = false;
 				if (txt.Contains("."))
 				{
 					if (double.TryParse(txt, NumberStyles.Float, CultureInfo.InvariantCulture, out var d))
 					{
+						success = true;
 						value = d;
 						type = ODataPrimitiveType.Double;
 					}
@@ -255,13 +257,14 @@ namespace Skyline.DataMiner.SDM.OData
 				{
 					if (long.TryParse(txt, NumberStyles.Integer, CultureInfo.InvariantCulture, out long l))
 					{
+						success = true;
 						value = l;
 						type = ODataPrimitiveType.Int64;
 					}
 				}
 
 				// fallback
-				if (double.TryParse(txt, NumberStyles.Float, CultureInfo.InvariantCulture, out double dd))
+				if (!success && double.TryParse(txt, NumberStyles.Float, CultureInfo.InvariantCulture, out double dd))
 				{
 					value = dd;
 					type = ODataPrimitiveType.Double;

@@ -386,6 +386,37 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		public void SubProperty_Path_Outside_Lambda_Is_Kept_As_Single_Path()
+		{
+			// Arrange
+			var filter = "Mother/Identifier eq 'Person 001'";
+			var parser = new ODataFilterParser(filter);
+
+			// Act
+			var tree = parser.Parse();
+
+			// Assert
+			var binaryNode = tree.Filter.As<BinaryNode>();
+			binaryNode.Left.Should().BeOfType<PropertyNode>();
+			binaryNode.Left.As<PropertyNode>().Path.Should().Be("Mother/Identifier");
+		}
+
+		[TestMethod]
+		public void SubProperty_Path_With_Multiple_Segments()
+		{
+			// Arrange
+			var filter = "Mother/Mother/Identifier eq 'Person 001'";
+			var parser = new ODataFilterParser(filter);
+
+			// Act
+			var tree = parser.Parse();
+
+			// Assert
+			var binaryNode = tree.Filter.As<BinaryNode>();
+			binaryNode.Left.As<PropertyNode>().Path.Should().Be("Mother/Mother/Identifier");
+		}
+
+		[TestMethod]
 		public void Whitespace_Is_Optional_Around_Punctuation()
 		{
 			// Arrange
@@ -561,10 +592,28 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			var parser = new ODataFilterParser(filter);
 
 			// Act
-			Action act = () => parser.Parse();
+			var tree = parser.Parse();
 
 			// Assert
-			act.Should().Throw<ODataParseException>();
+			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
+			literal.Type.Should().Be(ODataPrimitiveType.Int64);
+			literal.Value.Should().Be(-5L);
+		}
+
+		[TestMethod]
+		public void Negative_Decimal_Number()
+		{
+			// Arrange
+			var filter = "Age gt -1.5";
+			var parser = new ODataFilterParser(filter);
+
+			// Act
+			var tree = parser.Parse();
+
+			// Assert
+			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
+			literal.Type.Should().Be(ODataPrimitiveType.Double);
+			literal.Value.Should().Be(-1.5);
 		}
 
 		[TestMethod]

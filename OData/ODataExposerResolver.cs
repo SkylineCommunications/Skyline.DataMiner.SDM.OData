@@ -1,86 +1,41 @@
-namespace Skyline.DataMiner.SDM.OData
+﻿namespace Skyline.DataMiner.SDM.OData
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
 	using System.Linq;
-	using System.Reflection;
 
-	internal class ODataToFilterElementConverter
+	using Skyline.DataMiner.Net.Messages.SLDataGateway;
+
+	// Resolves OData AST nodes to FieldExposers via ExposerRegistry, the same path resolution used by regular querying.
+	internal class ODataExposerResolver
 	{
-		private readonly Dictionary<string, MemberInfo> _properties = new Dictionary<string, MemberInfo>();
+		private readonly Type _type;
+		private readonly string _basePath;
+		private readonly string? _lambdaVariable;
 
-		public ODataToFilterElementConverter(Type type)
+		public ODataExposerResolver(Type type, string basePath = "", string? lambdaVariable = null)
 		{
-			var actualType = type;
-			if (TryGetCollectionElementType(type, out var elementType))
-			{
-				actualType = elementType;
-			}
-
-			_properties = actualType
-				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-				.ToDictionary(p => p.Name, p => (MemberInfo)p);
+			_type = type;
+			_basePath = basePath ?? String.Empty;
+			_lambdaVariable = lambdaVariable;
 		}
 
-		public ODataToFilterElementConverter(Dictionary<string, MemberInfo> properties)
+		public bool TryResolve(ODataNode? node, out FieldExposer? exposer)
 		{
-			_properties = properties ?? throw new ArgumentNullException(nameof(properties));
-		}
-
-		public IReadOnlyDictionary<string, MemberInfo> Properties { get => new ReadOnlyDictionary<string, MemberInfo>(_properties); }
-
-		public object ParseLiteral(MemberInfo memberInfo, LiteralNode literal)
-		{
-			if (memberInfo is not PropertyInfo pi)
-			{
-				throw new NotSupportedException($"Unsupported member type: {memberInfo.GetType().FullName}");
-			}
-
-			var propertyType = pi.PropertyType;
-			var value = ParseLiteral(propertyType, literal);
-			return value;
-		}
-
-		public bool TryGetMember(ODataNode? node, out MemberInfo? memberInfo)
-		{
-			memberInfo = null;
-
-			if (node is null)
-			{
-				return false;
-			}
+			exposer = null;
 
 			if (!(node is PropertyNode pn))
 			{
 				return false;
 			}
 
-			// Happens in case this is a MethodCallNode
-			// Colection/any(e: e/Property eq 'Value')
-			var path = pn.Path;
-			var indexOfSlash = pn.Path.IndexOf('/');
-			if (indexOfSlash > 0)
-			{
-				path = pn.Path.Substring(indexOfSlash + 1);
-			}
-
-			if (_properties.TryGetValue(path, out memberInfo))
-			{
-				return true;
-			}
-
-			return false;
+			exposer = ExposerRegistry.findExposer(_type, GetFullPath(pn));
+			return exposer is not null;
 		}
 
 		public bool TryGetLiteral(ODataNode? node, out LiteralNode? value)
 		{
 			value = null;
-
-			if (node is null)
-			{
-				return false;
-			}
 
 			if (node is LiteralNode ln)
 			{
@@ -91,38 +46,38 @@ namespace Skyline.DataMiner.SDM.OData
 			return false;
 		}
 
-		public bool TryGetOperand(BinaryNode? node, out Skyline.DataMiner.Net.Messages.SLDataGateway.Comparer comparer)
+		public bool TryGetOperand(BinaryNode? node, out Comparer comparer)
 		{
-			comparer = Net.Messages.SLDataGateway.Comparer.Equals;
+			comparer = Comparer.Equals;
 
 			switch (node?.Operation)
 			{
 				case ODataLogicalOperation.Equal:
-					comparer = Net.Messages.SLDataGateway.Comparer.Equals;
+					comparer = Comparer.Equals;
 					break;
 
 				case ODataLogicalOperation.NotEqual:
-					comparer = Net.Messages.SLDataGateway.Comparer.NotEquals;
+					comparer = Comparer.NotEquals;
 					break;
 
 				case ODataLogicalOperation.GreaterThan when node?.Left is PropertyNode:
 				case ODataLogicalOperation.LessThan when node?.Right is PropertyNode:
-					comparer = Net.Messages.SLDataGateway.Comparer.GT;
+					comparer = Comparer.GT;
 					break;
 
 				case ODataLogicalOperation.GreaterThanOrEqual when node?.Left is PropertyNode:
 				case ODataLogicalOperation.LessThanOrEqual when node?.Right is PropertyNode:
-					comparer = Net.Messages.SLDataGateway.Comparer.GTE;
+					comparer = Comparer.GTE;
 					break;
 
 				case ODataLogicalOperation.LessThan when node?.Left is PropertyNode:
 				case ODataLogicalOperation.GreaterThan when node?.Right is PropertyNode:
-					comparer = Net.Messages.SLDataGateway.Comparer.LT;
+					comparer = Comparer.LT;
 					break;
 
 				case ODataLogicalOperation.LessThanOrEqual when node?.Left is PropertyNode:
 				case ODataLogicalOperation.GreaterThanOrEqual when node?.Right is PropertyNode:
-					comparer = Net.Messages.SLDataGateway.Comparer.LTE;
+					comparer = Comparer.LTE;
 					break;
 
 				default:
@@ -150,19 +105,28 @@ namespace Skyline.DataMiner.SDM.OData
 			}
 		}
 
-		private static bool IsBasicType(Type type)
+		// Scopes a resolver one level deeper for an any(variable: body) call.
+		public ODataExposerResolver CreateNested(PropertyNode target, string lambdaVariable)
 		{
-			if (type.IsPrimitive || type.IsEnum)
-				return true;
+			return new ODataExposerResolver(_type, GetFullPath(target), lambdaVariable);
+		}
 
-			if (type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime) || type == typeof(Guid) || type == typeof(DateTimeOffset) || type == typeof(TimeSpan))
-				return true;
+		// Strips the lambda variable segment (e.g. "e" in "e/Property"); any other '/' is kept as a literal path segment.
+		private string GetFullPath(PropertyNode node)
+		{
+			var path = node.Path;
 
-			// Nullable<T> where T is a basic type
-			if (Nullable.GetUnderlyingType(type) is Type underlying)
-				return IsBasicType(underlying);
+			var indexOfSlash = path.IndexOf('/');
+			if (indexOfSlash > 0 &&
+				_lambdaVariable is not null &&
+				path.Substring(0, indexOfSlash) == _lambdaVariable)
+			{
+				path = path.Substring(indexOfSlash + 1);
+			}
 
-			return false;
+			path = path.Replace('/', '.');
+
+			return String.IsNullOrEmpty(_basePath) ? path : _basePath + "." + path;
 		}
 
 		private static bool TryGetCollectionElementType(Type type, out Type elementType)
@@ -202,7 +166,7 @@ namespace Skyline.DataMiner.SDM.OData
 			return false;
 		}
 
-		private static object ParseLiteral(Type type, LiteralNode literal)
+		public static object ParseLiteral(Type type, LiteralNode literal)
 		{
 			TryGetCollectionElementType(type, out var elementType);
 
@@ -320,15 +284,6 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				throw new NotSupportedException($"Unsupported property type: {type.FullName}");
 			}
-		}
-	}
-
-	internal class ODataToFilterElementConverter<T>
-		: ODataToFilterElementConverter
-	{
-		public ODataToFilterElementConverter()
-			: base(typeof(T))
-		{
 		}
 	}
 }

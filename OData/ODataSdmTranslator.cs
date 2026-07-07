@@ -2,9 +2,7 @@ namespace Skyline.DataMiner.SDM.OData
 {
 	using System;
 	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
-	using System.Reflection;
 
 	using Skyline.DataMiner.Net.Messages.SLDataGateway;
 
@@ -14,26 +12,20 @@ namespace Skyline.DataMiner.SDM.OData
 	public class ODataSdmTranslator<T> : ODataVisitor
 		where T : class
 	{
-		private readonly string _basePath = String.Empty;
-		private readonly ODataToFilterElementConverter _converter;
-		////private readonly Func<MemberInfo, Comparer, object, FilterElement<T>> _createFilter;
-		////private readonly Func<MemberInfo, SortOrder, bool, IOrderByElement> _createOrder;
+		private readonly ODataExposerResolver _resolver;
 
 		private FilterElement<T> _filter = new TRUEFilterElement<T>();
 		private IQuery<T> _query = new TRUEFilterElement<T>().ToQuery();
 
 		public ODataSdmTranslator()
 		{
-			_converter = new ODataToFilterElementConverter<T>();
+			_resolver = new ODataExposerResolver(typeof(T));
 		}
 
-		// Is used when context changes happen,
-		// This can be when we go 1 level deeper in a collection (any)
-		// This can be when we go 1 property level deeper MyProp.MyType.Name
-		internal ODataSdmTranslator(ODataToFilterElementConverter converter, string basePath)
+		// Used when entering a nested context (e.g. one level deeper via any()).
+		internal ODataSdmTranslator(ODataExposerResolver resolver)
 		{
-			_converter = converter;
-			_basePath = basePath;
+			_resolver = resolver;
 		}
 
 		public FilterElement<T> TranslateFilter(string filter)
@@ -109,13 +101,13 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				case "contains":
 				{
-					if (!_converter.TryGetMember(node.Arguments[0], out var memberInfo) ||
-						!_converter.TryGetLiteral(node.Arguments[1], out var literal))
+					if (!_resolver.TryResolve(node.Arguments[0], out var exposer) ||
+						!_resolver.TryGetLiteral(node.Arguments[1], out var literal))
 					{
 						throw new NotSupportedException($"Unsupported comparison: {node}");
 					}
 
-					_filter = CreateFilter(GetPathForMember(memberInfo!), Comparer.Contains, _converter.ParseLiteral(memberInfo!, literal!));
+					_filter = FilterElementFactory.Create<T>(exposer!, Comparer.Contains, ODataExposerResolver.ParseLiteral(exposer!.FieldType, literal!));
 					break;
 				}
 
@@ -132,15 +124,12 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				case "any":
 				{
-					if (!_converter.TryGetMember(node.Target, out var memberInfo) || !(memberInfo is PropertyInfo pi))
-					{
-						throw new NotSupportedException($"Unsupported comparison: {node}");
-					}
+					////if (!_resolver.TryResolve(node.Target, out _))
+					////{
+					////	throw new NotSupportedException($"Unsupported comparison: {node}");
+					////}
 
-					var translator = new ODataSdmTranslator<T>(
-						//new ODataToFilterElementConverter(pi!.PropertyType, node.Variable.Path),
-						new ODataToFilterElementConverter(pi!.PropertyType),
-						GetPathForMember(memberInfo));
+					var translator = new ODataSdmTranslator<T>(_resolver.CreateNested(node.Target, node.Variable.Path));
 
 					translator.Visit(node.Body);
 					_filter = translator._filter;
@@ -157,18 +146,18 @@ namespace Skyline.DataMiner.SDM.OData
 
 		public override void VisitBinary(BinaryNode node)
 		{
-			if (!_converter.TryGetOperand(node, out var comparer))
+			if (!_resolver.TryGetOperand(node, out var comparer))
 			{
 				throw new NotSupportedException($"Unsupported comparison: {node}");
 			}
 
-			if (!((_converter.TryGetMember(node.Left, out var memberInfo) && _converter.TryGetLiteral(node.Right, out var literal)) ||
-				(_converter.TryGetMember(node.Right, out memberInfo) && _converter.TryGetLiteral(node.Left, out literal))))
+			if (!((_resolver.TryResolve(node.Left, out var exposer) && _resolver.TryGetLiteral(node.Right, out var literal)) ||
+				(_resolver.TryResolve(node.Right, out exposer) && _resolver.TryGetLiteral(node.Left, out literal))))
 			{
 				throw new NotSupportedException($"Unsupported comparison: {node}");
 			}
 
-			_filter = CreateFilter(GetPathForMember(memberInfo!), comparer, _converter.ParseLiteral(memberInfo!, literal!));
+			_filter = FilterElementFactory.Create<T>(exposer!, comparer, ODataExposerResolver.ParseLiteral(exposer!.FieldType, literal!));
 		}
 
 		public override void VisitOrder(OrderNode node)
@@ -179,12 +168,12 @@ namespace Skyline.DataMiner.SDM.OData
 				return;
 			}
 
-			if (!_converter.TryGetMember(node.Property, out var memberInfo))
+			if (!_resolver.TryResolve(node.Property, out var exposer))
 			{
 				throw new NotSupportedException($"Unsupported property to order by: '{node.Property.Path}'");
 			}
 
-			if (!_converter.TryGetOrder(node, out var sortOrder))
+			if (!_resolver.TryGetOrder(node, out var sortOrder))
 			{
 				throw new NotSupportedException($"Unsupported order type: '{node.Order}'");
 			}
@@ -192,45 +181,13 @@ namespace Skyline.DataMiner.SDM.OData
 			if (!_query.Order.Elements.Any())
 			{
 				_query = _query.WithOrder(
-					OrderBy.Default.SingleConcat(CreateOrderBy(GetPathForMember(memberInfo!), sortOrder, false)));
+					OrderBy.Default.SingleConcat(OrderByElementFactory.Create(exposer!, sortOrder, false)));
 			}
 			else
 			{
 				_query = _query.WithOrder(
-					_query.Order.SingleConcat(CreateOrderBy(GetPathForMember(memberInfo!), sortOrder, false)));
+					_query.Order.SingleConcat(OrderByElementFactory.Create(exposer!, sortOrder, false)));
 			}
-		}
-
-		private static FilterElement<T> CreateFilter(string path, Comparer comparer, object value)
-		{
-			var exposer = ExposerRegistry.findExposer(typeof(T), path);
-			if (exposer is null)
-			{
-				throw new NotSupportedException($"Could not find an exposer for property with path '{path}'");
-			}
-
-			return FilterElementFactory.Create<T>(exposer, comparer, value);
-		}
-
-		private static IOrderByElement CreateOrderBy(string path, SortOrder sortOrder, bool naturalSort = false)
-		{
-			var exposer = ExposerRegistry.findExposer(typeof(T), path);
-			if (exposer is null)
-			{
-				throw new NotSupportedException($"Could not find an exposer for property with path '{path}'");
-			}
-
-			return OrderByElementFactory.Create(exposer, sortOrder, naturalSort);
-		}
-
-		private string GetPathForMember(MemberInfo memberInfo)
-		{
-			if (String.IsNullOrEmpty(_basePath))
-			{
-				return memberInfo.Name;
-			}
-
-			return String.Join(".", _basePath, memberInfo.Name);
 		}
 	}
 }

@@ -68,9 +68,14 @@ namespace Skyline.DataMiner.SDM.OData
 			}
 
 			// Handle number literals
-			if (char.IsDigit(c))
+			if (char.IsDigit(c) || (c == '-' && char.IsDigit(PeekNext())))
 			{
 				var sb = new StringBuilder();
+				if (Peek() == '-')
+				{
+					sb.Append(NextChar());
+				}
+
 				while (char.IsDigit(Peek()))
 				{
 					sb.Append(NextChar());
