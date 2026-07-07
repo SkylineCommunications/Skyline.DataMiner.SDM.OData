@@ -3,7 +3,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Represents an OData arithmetic operator.
 	/// </summary>
-	public enum ODataArithmeticOperation
+	internal enum ODataArithmeticOperation
 	{
 		/// <summary>
 		/// Represents the OData <c>add</c> operator.

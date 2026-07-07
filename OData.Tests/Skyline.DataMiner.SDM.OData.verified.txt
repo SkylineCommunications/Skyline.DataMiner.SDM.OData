@@ -1,1 +1,242 @@
-﻿
+﻿[assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/SkylineCommunications/Skyline.DataMiner.SDM.OData")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8", FrameworkDisplayName=".NET Framework 4.8")]
+namespace Skyline.DataMiner.SDM.OData
+{
+    public class AndNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.AndNode>
+    {
+        public System.Collections.Generic.IReadOnlyCollection<Skyline.DataMiner.SDM.OData.ODataNode> Nodes { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.AndNode AddNode(Skyline.DataMiner.SDM.OData.ODataNode node) { }
+        public Skyline.DataMiner.SDM.OData.AndNode Update(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> nodes, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.AndNode WithNodes(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> nodes) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+    }
+    public class BinaryNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.BinaryNode>
+    {
+        public Skyline.DataMiner.SDM.OData.ODataNode Left { get; }
+        public Skyline.DataMiner.SDM.OData.ODataLogicalOperation Operation { get; }
+        public Skyline.DataMiner.SDM.OData.ODataNode Right { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.BinaryNode Update(Skyline.DataMiner.SDM.OData.ODataNode left, Skyline.DataMiner.SDM.OData.ODataLogicalOperation operation, Skyline.DataMiner.SDM.OData.ODataNode right, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.BinaryNode WithLeft(Skyline.DataMiner.SDM.OData.ODataNode left) { }
+        public Skyline.DataMiner.SDM.OData.BinaryNode WithOperation(Skyline.DataMiner.SDM.OData.ODataLogicalOperation operation) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.BinaryNode WithRight(Skyline.DataMiner.SDM.OData.ODataNode right) { }
+    }
+    public class FilterNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.FilterNode>
+    {
+        public static readonly Skyline.DataMiner.SDM.OData.FilterNode Empty;
+        public Skyline.DataMiner.SDM.OData.ODataNode? Filter { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.FilterNode Update(Skyline.DataMiner.SDM.OData.ODataNode? filter) { }
+        public Skyline.DataMiner.SDM.OData.FilterNode WithFilter(Skyline.DataMiner.SDM.OData.ODataNode? filter) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+    }
+    public class FunctionCallNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.FunctionCallNode>
+    {
+        public FunctionCallNode(string methodName, System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> arguments, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        public System.Collections.Generic.IReadOnlyList<Skyline.DataMiner.SDM.OData.ODataNode> Arguments { get; }
+        public string Name { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.FunctionCallNode AddArgument(Skyline.DataMiner.SDM.OData.ODataNode argument) { }
+        public Skyline.DataMiner.SDM.OData.FunctionCallNode Update(string methodName, System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> arguments, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.FunctionCallNode WithArgument(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> arguments) { }
+        public Skyline.DataMiner.SDM.OData.FunctionCallNode WithName(string methodName) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+    }
+    public interface IODataNode
+    {
+        Skyline.DataMiner.SDM.OData.ODataNode? Parent { get; }
+        void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor);
+    }
+    public interface IODataVisitor
+    {
+        void VisitAnd(Skyline.DataMiner.SDM.OData.AndNode node);
+        void VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode node);
+        void VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode node);
+        void VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode node);
+        void VisitLiteral(Skyline.DataMiner.SDM.OData.LiteralNode node);
+        void VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode node);
+        void VisitNot(Skyline.DataMiner.SDM.OData.NotNode node);
+        void VisitOr(Skyline.DataMiner.SDM.OData.OrNode node);
+        void VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode node);
+        void VisitProperty(Skyline.DataMiner.SDM.OData.PropertyNode node);
+    }
+    public class LiteralNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.LiteralNode>
+    {
+        public Skyline.DataMiner.SDM.OData.ODataPrimitiveType Type { get; }
+        public object Value { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.LiteralNode Update(Skyline.DataMiner.SDM.OData.ODataPrimitiveType type, object value, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.LiteralNode WithType(Skyline.DataMiner.SDM.OData.ODataPrimitiveType type) { }
+        public Skyline.DataMiner.SDM.OData.LiteralNode WithValue(object value) { }
+    }
+    public class MethodCallNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.MethodCallNode>
+    {
+        public MethodCallNode(string methodName, Skyline.DataMiner.SDM.OData.PropertyNode target, Skyline.DataMiner.SDM.OData.PropertyNode variable, Skyline.DataMiner.SDM.OData.ODataNode body, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        public Skyline.DataMiner.SDM.OData.ODataNode Body { get; }
+        public string Name { get; }
+        public Skyline.DataMiner.SDM.OData.PropertyNode Target { get; }
+        public Skyline.DataMiner.SDM.OData.PropertyNode Variable { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.MethodCallNode Update(string methodName, Skyline.DataMiner.SDM.OData.PropertyNode target, Skyline.DataMiner.SDM.OData.PropertyNode variable, Skyline.DataMiner.SDM.OData.ODataNode body, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.MethodCallNode WithBody(Skyline.DataMiner.SDM.OData.ODataNode body) { }
+        public Skyline.DataMiner.SDM.OData.MethodCallNode WithName(string methodName) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.MethodCallNode WithTarget(Skyline.DataMiner.SDM.OData.PropertyNode target) { }
+        public Skyline.DataMiner.SDM.OData.MethodCallNode WithVariable(Skyline.DataMiner.SDM.OData.PropertyNode variable) { }
+    }
+    public class NotNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.NotNode>
+    {
+        public Skyline.DataMiner.SDM.OData.ODataNode Child { get; }
+        public Skyline.DataMiner.SDM.OData.ODataLogicalOperation Operation { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.NotNode Update(Skyline.DataMiner.SDM.OData.ODataNode child, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.NotNode WithChild(Skyline.DataMiner.SDM.OData.ODataNode child) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+    }
+    public class ODataFilterParser
+    {
+        public static Skyline.DataMiner.SDM.OData.FilterNode Parse(string filter) { }
+    }
+    public enum ODataLogicalOperation
+    {
+        Equal = 0,
+        NotEqual = 1,
+        GreaterThan = 2,
+        GreaterThanOrEqual = 3,
+        LessThan = 4,
+        LessThanOrEqual = 5,
+        And = 6,
+        Or = 7,
+        Not = 8,
+    }
+    public abstract class ODataNode : Skyline.DataMiner.SDM.OData.IODataNode
+    {
+        protected ODataNode(Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        public Skyline.DataMiner.SDM.OData.ODataNode? Parent { get; }
+        public abstract void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor);
+        protected abstract Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent);
+    }
+    public abstract class ODataNode<TNode> : Skyline.DataMiner.SDM.OData.ODataNode
+        where TNode : Skyline.DataMiner.SDM.OData.ODataNode
+    {
+        protected ODataNode(Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        public TNode WithParent(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+    }
+    public enum ODataOrder
+    {
+        None = 0,
+        Ascending = 1,
+        Descending = 2,
+    }
+    public class ODataOrderByParser
+    {
+        public static Skyline.DataMiner.SDM.OData.OrderNode Parse(string order) { }
+    }
+    public enum ODataPrimitiveType
+    {
+        Null = 0,
+        Binary = 1,
+        Boolean = 2,
+        Byte = 3,
+        SByte = 4,
+        Decimal = 5,
+        Double = 6,
+        Single = 7,
+        Guid = 8,
+        Int16 = 9,
+        Int32 = 10,
+        Int64 = 11,
+        String = 12,
+        Time = 13,
+        DateTime = 14,
+        DateTimeOffset = 15,
+    }
+    public class ODataSdmTranslator<T> : Skyline.DataMiner.SDM.OData.ODataVisitor
+        where T :  class
+    {
+        public ODataSdmTranslator() { }
+        public SLDataGateway.API.Types.Querying.IQuery<T> Translate(string filter, string orderBy) { }
+        public Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement<T> TranslateFilter(string filter) { }
+        public SLDataGateway.API.Types.Querying.IQuery<T> TranslateOrderBy(string orderBy) { }
+        public override void VisitAnd(Skyline.DataMiner.SDM.OData.AndNode node) { }
+        public override void VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode node) { }
+        public override void VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode node) { }
+        public override void VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode node) { }
+        public override void VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode node) { }
+        public override void VisitNot(Skyline.DataMiner.SDM.OData.NotNode node) { }
+        public override void VisitOr(Skyline.DataMiner.SDM.OData.OrNode node) { }
+        public override void VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode node) { }
+    }
+    public class ODataVisitor : Skyline.DataMiner.SDM.OData.IODataVisitor
+    {
+        public ODataVisitor() { }
+        public virtual void DefaultVisit(Skyline.DataMiner.SDM.OData.ODataNode node) { }
+        public virtual void Visit(Skyline.DataMiner.SDM.OData.ODataNode? node) { }
+        public virtual void VisitAnd(Skyline.DataMiner.SDM.OData.AndNode node) { }
+        public virtual void VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode node) { }
+        public virtual void VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode node) { }
+        public virtual void VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode node) { }
+        public virtual void VisitLiteral(Skyline.DataMiner.SDM.OData.LiteralNode node) { }
+        public virtual void VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode node) { }
+        public virtual void VisitNot(Skyline.DataMiner.SDM.OData.NotNode node) { }
+        public virtual void VisitOr(Skyline.DataMiner.SDM.OData.OrNode node) { }
+        public virtual void VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode node) { }
+        public virtual void VisitProperty(Skyline.DataMiner.SDM.OData.PropertyNode node) { }
+    }
+    public class ODataWalker : Skyline.DataMiner.SDM.OData.ODataVisitor
+    {
+        public ODataWalker() { }
+        public override void VisitAnd(Skyline.DataMiner.SDM.OData.AndNode node) { }
+        public override void VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode node) { }
+        public override void VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode node) { }
+        public override void VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode node) { }
+        public override void VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode node) { }
+        public override void VisitOr(Skyline.DataMiner.SDM.OData.OrNode node) { }
+        public override void VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode node) { }
+    }
+    public class OrNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.OrNode>
+    {
+        public System.Collections.Generic.IReadOnlyCollection<Skyline.DataMiner.SDM.OData.ODataNode> Nodes { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.OrNode AddNode(Skyline.DataMiner.SDM.OData.ODataNode node) { }
+        public Skyline.DataMiner.SDM.OData.OrNode Update(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> nodes, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.OrNode WithNodes(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode> nodes) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+    }
+    public class OrderNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.OrderNode>
+    {
+        public OrderNode(Skyline.DataMiner.SDM.OData.PropertyNode property, Skyline.DataMiner.SDM.OData.ODataOrder order, Skyline.DataMiner.SDM.OData.OrderNode? next, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        public Skyline.DataMiner.SDM.OData.OrderNode? Next { get; }
+        public Skyline.DataMiner.SDM.OData.ODataOrder Order { get; }
+        public Skyline.DataMiner.SDM.OData.PropertyNode Property { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.OrderNode Update(Skyline.DataMiner.SDM.OData.PropertyNode property, Skyline.DataMiner.SDM.OData.ODataOrder order, Skyline.DataMiner.SDM.OData.OrderNode? next, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.OrderNode WithNext(Skyline.DataMiner.SDM.OData.OrderNode? next) { }
+        public Skyline.DataMiner.SDM.OData.OrderNode WithOrder(Skyline.DataMiner.SDM.OData.ODataOrder order) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.OrderNode WithProperty(Skyline.DataMiner.SDM.OData.PropertyNode property) { }
+    }
+    public class PropertyNode : Skyline.DataMiner.SDM.OData.ODataNode<Skyline.DataMiner.SDM.OData.PropertyNode>
+    {
+        public PropertyNode(string path, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) { }
+        public string Path { get; }
+        public override void Accept(Skyline.DataMiner.SDM.OData.IODataVisitor visitor) { }
+        public Skyline.DataMiner.SDM.OData.PropertyNode Update(string path, Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        protected override Skyline.DataMiner.SDM.OData.ODataNode WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) { }
+        public Skyline.DataMiner.SDM.OData.PropertyNode WithPath(string path) { }
+    }
+}
+namespace Skyline.DataMiner.SDM.OData.Exceptions
+{
+    [System.Serializable]
+    public class ODataParseException : System.Exception
+    {
+        public ODataParseException() { }
+        public ODataParseException(string message) { }
+        protected ODataParseException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+        public ODataParseException(string message, System.Exception innerException) { }
+    }
+}

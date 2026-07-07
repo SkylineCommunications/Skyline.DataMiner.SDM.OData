@@ -44,7 +44,7 @@ namespace Skyline.DataMiner.SDM.OData
 		/// <exception cref="NotSupportedException">Thrown when the filter contains an unsupported construct.</exception>
 		public FilterElement<T> TranslateFilter(string filter)
 		{
-			var tree = new ODataFilterParser(filter).Parse();
+			var tree = ODataFilterParser.Parse(filter);
 			Visit(tree);
 			return _filter;
 		}
@@ -58,7 +58,7 @@ namespace Skyline.DataMiner.SDM.OData
 		/// <exception cref="NotSupportedException">Thrown when the order-by expression contains an unsupported construct.</exception>
 		public IQuery<T> TranslateOrderBy(string orderBy)
 		{
-			var tree = new ODataOrderByParser(orderBy).Parse();
+			var tree = ODataOrderByParser.Parse(orderBy);
 			Visit(tree);
 			return _query;
 		}
@@ -74,12 +74,12 @@ namespace Skyline.DataMiner.SDM.OData
 		public IQuery<T> Translate(string filter, string orderBy)
 		{
 			// Translate the filter
-			var filterTree = new ODataFilterParser(filter).Parse();
+			var filterTree = ODataFilterParser.Parse(filter);
 			Visit(filterTree);
 			_query = _filter.ToQuery();
 
 			// Translate the sort order
-			var orderTree = new ODataOrderByParser(orderBy).Parse();
+			var orderTree = ODataOrderByParser.Parse(orderBy);
 			Visit(orderTree);
 			return _query;
 		}

@@ -13,22 +13,24 @@ namespace Skyline.DataMiner.SDM.OData
 
 		private ODataToken _token = new ODataToken(ODataTokenType.EndOfToken, String.Empty, 0);
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ODataOrderByParser"/> class.
-		/// </summary>
-		/// <param name="order">The order-by expression to parse.</param>
-		public ODataOrderByParser(string order)
+		private ODataOrderByParser(string order)
 		{
 			_tokenizer = new ODataTokenizer(order);
 			Next();
 		}
 
 		/// <summary>
-		/// Parses the configured order-by expression.
+		/// Parses the specified order-by expression into a syntax tree.
 		/// </summary>
+		/// <param name="order">The order-by expression to parse.</param>
 		/// <returns>The parsed order node.</returns>
 		/// <exception cref="ODataParseException">Thrown when the order-by expression contains invalid syntax.</exception>
-		public OrderNode Parse()
+		public static OrderNode Parse(string order)
+		{
+			return new ODataOrderByParser(order).Parse();
+		}
+
+		private OrderNode Parse()
 		{
 			var node = default(OrderNode);
 			if (_token.Type == ODataTokenType.EndOfToken)
@@ -52,7 +54,7 @@ namespace Skyline.DataMiner.SDM.OData
 		/// <param name="parent">The parent node.</param>
 		/// <returns>The parsed order node.</returns>
 		/// <exception cref="ODataParseException">Thrown when the order clause contains invalid syntax.</exception>
-		public OrderNode ParseOrder(OrderNode? parent)
+		private OrderNode ParseOrder(OrderNode? parent)
 		{
 			if (_token.Type != ODataTokenType.Identifier)
 			{

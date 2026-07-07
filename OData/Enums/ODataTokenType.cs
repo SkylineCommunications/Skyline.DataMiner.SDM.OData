@@ -3,7 +3,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Represents the token types recognized by the OData tokenizer.
 	/// </summary>
-	public enum ODataTokenType
+	internal enum ODataTokenType
 	{
 		// General
 
@@ -297,7 +297,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Provides helper methods for working with <see cref="ODataTokenType"/>.
 	/// </summary>
-	public static class ODataTokenTypeExtensions
+	internal static class ODataTokenTypeExtensions
 	{
 		/// <summary>
 		/// Determines whether the token represents a logical operator.

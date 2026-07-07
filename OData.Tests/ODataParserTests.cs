@@ -15,10 +15,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -31,10 +29,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq 'Andi Tamer'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -57,10 +53,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "not Name eq 'Andi Tamer'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -87,10 +81,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "startswith(Name, 'Andi')";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -113,10 +105,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "contains(Name, 'Andi')";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -139,10 +129,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age ne 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -165,10 +153,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age gt 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -191,10 +177,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age ge 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -217,10 +201,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age lt 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -243,10 +225,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age le 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -269,10 +249,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "'Andi Tamer' eq Name and Age ge 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -294,10 +272,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age ge 25 and (Heigth gt 160 and Heigth le 180)";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -331,10 +307,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "'Andi Tamer' eq Name or Age ge 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -359,10 +333,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "ExternalIdentifiers/any(e: e/ExternalName eq 'Andi Tamer')";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Should().BeOfType<FilterNode>();
@@ -390,10 +362,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Mother/Identifier eq 'Person 001'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var binaryNode = tree.Filter.As<BinaryNode>();
@@ -406,10 +376,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Mother/Mother/Identifier eq 'Person 001'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var binaryNode = tree.Filter.As<BinaryNode>();
@@ -421,10 +389,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var binaryNode = tree.Filter.As<BinaryNode>();
@@ -437,10 +403,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name\teq\n'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var binaryNode = tree.Filter.As<BinaryNode>();
@@ -453,10 +417,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name EQ 'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var binaryNode = tree.Filter.As<BinaryNode>();
@@ -469,10 +431,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "nAmE eq 'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Filter.As<BinaryNode>().Left.As<PropertyNode>().Path.Should().Be("nAmE");
@@ -483,10 +443,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = @"Name eq 'O\'Brien'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Filter.As<BinaryNode>().Right.As<LiteralNode>().Value.Should().Be("O'Brien");
@@ -497,10 +455,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = @"Name eq 'Line1\nLine2\tEnd'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Filter.As<BinaryNode>().Right.As<LiteralNode>().Value.Should().Be("Line1\nLine2\tEnd");
@@ -511,10 +467,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq ''";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			tree.Filter.As<BinaryNode>().Right.As<LiteralNode>().Value.Should().Be(String.Empty);
@@ -525,10 +479,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq null";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
@@ -541,10 +493,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age gt 1.5";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
@@ -557,10 +507,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age gt 1,5";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
@@ -573,10 +521,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age gt 25";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
@@ -589,10 +535,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age gt -5";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
@@ -605,10 +549,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age gt -1.5";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var literal = tree.Filter.As<BinaryNode>().Right.As<LiteralNode>();
@@ -621,10 +563,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq 'Andi";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataFilterParser.Parse(filter);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();
@@ -635,10 +575,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq #Andi";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataFilterParser.Parse(filter);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();
@@ -649,10 +587,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "(Name eq 'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataFilterParser.Parse(filter);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();
@@ -663,10 +599,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "contains(Name, 'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataFilterParser.Parse(filter);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();
@@ -677,10 +611,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq 'Andi' Age";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataFilterParser.Parse(filter);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();
@@ -691,10 +623,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "()";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataFilterParser.Parse(filter);
 
 			// Assert
 			act.Should().Throw<NotSupportedException>();
@@ -705,10 +635,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq 'Andi' or Age ge 25 and Age le 30";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var orNode = tree.Filter.As<OrNode>();
@@ -723,10 +651,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Name eq 'Andi' and Age ge 25 and Age le 130";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var andNode = tree.Filter.As<AndNode>();
@@ -742,10 +668,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "Age eq 1 or Age eq 2 or Age eq 3";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var orNode = tree.Filter.As<OrNode>();
@@ -757,10 +681,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "not not Name eq 'Andi'";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var outerNot = tree.Filter.As<NotNode>();
@@ -773,10 +695,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "not (Name eq 'Andi' and Age gt 25)";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var notNode = tree.Filter.As<NotNode>();
@@ -789,10 +709,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var filter = "ExternalIdentifiers/any(e: e/ExternalID eq 'p002' or e/ExternalName eq 'EXT Andi Tamer')";
-			var parser = new ODataFilterParser(filter);
-
 			// Act
-			var tree = parser.Parse();
+			var tree = ODataFilterParser.Parse(filter);
 
 			// Assert
 			var methodCallNode = tree.Filter.As<MethodCallNode>();
@@ -805,10 +723,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var orderBy = String.Empty;
-			var parser = new ODataOrderByParser(orderBy);
-
 			// Act
-			var node = parser.Parse();
+			var node = ODataOrderByParser.Parse(orderBy);
 
 			// Assert
 			node.Order.Should().Be(ODataOrder.None);
@@ -820,10 +736,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var orderBy = "Name";
-			var parser = new ODataOrderByParser(orderBy);
-
 			// Act
-			var node = parser.Parse();
+			var node = ODataOrderByParser.Parse(orderBy);
 
 			// Assert
 			node.Order.Should().Be(ODataOrder.Ascending);
@@ -836,10 +750,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var orderBy = "Name desc";
-			var parser = new ODataOrderByParser(orderBy);
-
 			// Act
-			var node = parser.Parse();
+			var node = ODataOrderByParser.Parse(orderBy);
 
 			// Assert
 			node.Order.Should().Be(ODataOrder.Descending);
@@ -850,10 +762,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var orderBy = "Age desc, Name asc";
-			var parser = new ODataOrderByParser(orderBy);
-
 			// Act
-			var node = parser.Parse();
+			var node = ODataOrderByParser.Parse(orderBy);
 
 			// Assert
 			node.Property.Path.Should().Be("Age");
@@ -869,10 +779,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var orderBy = "Name,";
-			var parser = new ODataOrderByParser(orderBy);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataOrderByParser.Parse(orderBy);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();
@@ -883,10 +791,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			// Arrange
 			var orderBy = "123 asc";
-			var parser = new ODataOrderByParser(orderBy);
-
 			// Act
-			Action act = () => parser.Parse();
+			Action act = () => ODataOrderByParser.Parse(orderBy);
 
 			// Assert
 			act.Should().Throw<ODataParseException>();

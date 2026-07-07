@@ -8,7 +8,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Tokenizes OData expressions.
 	/// </summary>
-	public class ODataTokenizer
+	internal class ODataTokenizer
 	{
 		private const char END = '\0';
 		private readonly string _filter;

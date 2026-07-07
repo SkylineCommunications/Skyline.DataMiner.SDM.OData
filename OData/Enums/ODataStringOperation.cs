@@ -3,7 +3,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Represents an OData string function.
 	/// </summary>
-	public enum ODataStringOperation
+	internal enum ODataStringOperation
 	{
 		/// <summary>
 		/// Represents the OData <c>substringof</c> function.

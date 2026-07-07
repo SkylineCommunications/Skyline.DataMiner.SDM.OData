@@ -11,7 +11,7 @@
 		[TestMethod]
 		public Task PublicChanges()
 		{
-			var assembly = typeof(ODataTokenizer).Assembly;
+			var assembly = typeof(ODataSdmTranslator<>).Assembly;
 			var publicApi = assembly.GeneratePublicApi();
 
 			return Verify(publicApi)

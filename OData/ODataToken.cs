@@ -3,7 +3,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Represents a token produced by the OData tokenizer.
 	/// </summary>
-	public class ODataToken
+	internal class ODataToken
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ODataToken"/> class.

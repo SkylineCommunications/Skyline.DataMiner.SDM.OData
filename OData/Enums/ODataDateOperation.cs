@@ -3,7 +3,7 @@ namespace Skyline.DataMiner.SDM.OData
 	/// <summary>
 	/// Represents an OData date function.
 	/// </summary>
-	public enum ODataDateOperation
+	internal enum ODataDateOperation
 	{
 		/// <summary>
 		/// Represents the OData <c>day</c> function.
