@@ -5,17 +5,29 @@ namespace Skyline.DataMiner.SDM.OData
 
 	using Skyline.DataMiner.SDM.OData.Exceptions;
 
+	/// <summary>
+	/// Tokenizes OData expressions.
+	/// </summary>
 	public class ODataTokenizer
 	{
 		private const char END = '\0';
 		private readonly string _filter;
 		private int i = 0;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ODataTokenizer"/> class.
+		/// </summary>
+		/// <param name="filter">The expression to tokenize.</param>
 		public ODataTokenizer(string filter)
 		{
 			_filter = filter;
 		}
 
+		/// <summary>
+		/// Reads the next token from the expression.
+		/// </summary>
+		/// <returns>The next token.</returns>
+		/// <exception cref="ODataParseException">Thrown when the input contains invalid syntax.</exception>
 		public ODataToken NextToken()
 		{
 			SkipWhitespace();

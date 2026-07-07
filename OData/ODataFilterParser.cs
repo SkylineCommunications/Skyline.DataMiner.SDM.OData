@@ -7,18 +7,31 @@ namespace Skyline.DataMiner.SDM.OData
 
 	using Skyline.DataMiner.SDM.OData.Exceptions;
 
+	/// <summary>
+	/// Parses OData filter expressions into syntax tree nodes.
+	/// </summary>
 	public class ODataFilterParser
 	{
 		private readonly ODataTokenizer _tokenizer;
 
 		private ODataToken _token;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ODataFilterParser"/> class.
+		/// </summary>
+		/// <param name="filter">The filter expression to parse.</param>
 		public ODataFilterParser(string filter)
 		{
 			_tokenizer = new ODataTokenizer(filter);
 			Next();
 		}
 
+		/// <summary>
+		/// Parses the configured filter expression.
+		/// </summary>
+		/// <returns>The parsed filter node.</returns>
+		/// <exception cref="ODataParseException">Thrown when the filter contains invalid syntax.</exception>
+		/// <exception cref="NotSupportedException">Thrown when the filter contains an unsupported construct.</exception>
 		public FilterNode Parse()
 		{
 			var node = new FilterNode();

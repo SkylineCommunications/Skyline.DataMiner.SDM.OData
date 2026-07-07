@@ -4,18 +4,30 @@ namespace Skyline.DataMiner.SDM.OData
 
 	using Skyline.DataMiner.SDM.OData.Exceptions;
 
+	/// <summary>
+	/// Parses OData order-by expressions into syntax tree nodes.
+	/// </summary>
 	public class ODataOrderByParser
 	{
 		private readonly ODataTokenizer _tokenizer;
 
 		private ODataToken _token = new ODataToken(ODataTokenType.EndOfToken, String.Empty, 0);
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ODataOrderByParser"/> class.
+		/// </summary>
+		/// <param name="order">The order-by expression to parse.</param>
 		public ODataOrderByParser(string order)
 		{
 			_tokenizer = new ODataTokenizer(order);
 			Next();
 		}
 
+		/// <summary>
+		/// Parses the configured order-by expression.
+		/// </summary>
+		/// <returns>The parsed order node.</returns>
+		/// <exception cref="ODataParseException">Thrown when the order-by expression contains invalid syntax.</exception>
 		public OrderNode Parse()
 		{
 			var node = default(OrderNode);
@@ -34,6 +46,12 @@ namespace Skyline.DataMiner.SDM.OData
 			return order;
 		}
 
+		/// <summary>
+		/// Parses an order clause and its optional continuation.
+		/// </summary>
+		/// <param name="parent">The parent node.</param>
+		/// <returns>The parsed order node.</returns>
+		/// <exception cref="ODataParseException">Thrown when the order clause contains invalid syntax.</exception>
 		public OrderNode ParseOrder(OrderNode? parent)
 		{
 			if (_token.Type != ODataTokenType.Identifier)

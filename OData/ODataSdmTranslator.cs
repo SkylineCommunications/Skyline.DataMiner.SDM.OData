@@ -9,6 +9,10 @@ namespace Skyline.DataMiner.SDM.OData
 	using SLDataGateway.API.Querying;
 	using SLDataGateway.API.Types.Querying;
 
+	/// <summary>
+	/// Translates OData syntax tree nodes into SDM query objects.
+	/// </summary>
+	/// <typeparam name="T">The SDM entity type.</typeparam>
 	public class ODataSdmTranslator<T> : ODataVisitor
 		where T : class
 	{
@@ -17,6 +21,9 @@ namespace Skyline.DataMiner.SDM.OData
 		private FilterElement<T> _filter = new TRUEFilterElement<T>();
 		private IQuery<T> _query = new TRUEFilterElement<T>().ToQuery();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ODataSdmTranslator{T}"/> class.
+		/// </summary>
 		public ODataSdmTranslator()
 		{
 			_resolver = new ODataExposerResolver(typeof(T));
@@ -28,6 +35,13 @@ namespace Skyline.DataMiner.SDM.OData
 			_resolver = resolver;
 		}
 
+		/// <summary>
+		/// Translates an OData filter string into an SDM filter.
+		/// </summary>
+		/// <param name="filter">The filter string to translate.</param>
+		/// <returns>The translated SDM filter.</returns>
+		/// <exception cref="Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException">Thrown when the filter is invalid.</exception>
+		/// <exception cref="NotSupportedException">Thrown when the filter contains an unsupported construct.</exception>
 		public FilterElement<T> TranslateFilter(string filter)
 		{
 			var tree = new ODataFilterParser(filter).Parse();
@@ -35,6 +49,13 @@ namespace Skyline.DataMiner.SDM.OData
 			return _filter;
 		}
 
+		/// <summary>
+		/// Translates an OData order-by string into an SDM query.
+		/// </summary>
+		/// <param name="orderBy">The order-by string to translate.</param>
+		/// <returns>The translated SDM query.</returns>
+		/// <exception cref="Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException">Thrown when the order-by expression is invalid.</exception>
+		/// <exception cref="NotSupportedException">Thrown when the order-by expression contains an unsupported construct.</exception>
 		public IQuery<T> TranslateOrderBy(string orderBy)
 		{
 			var tree = new ODataOrderByParser(orderBy).Parse();
@@ -42,6 +63,14 @@ namespace Skyline.DataMiner.SDM.OData
 			return _query;
 		}
 
+		/// <summary>
+		/// Translates OData filter and order-by strings into a single SDM query.
+		/// </summary>
+		/// <param name="filter">The filter string to translate.</param>
+		/// <param name="orderBy">The order-by string to translate.</param>
+		/// <returns>The translated SDM query.</returns>
+		/// <exception cref="Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException">Thrown when the input contains invalid syntax.</exception>
+		/// <exception cref="NotSupportedException">Thrown when the input contains an unsupported construct.</exception>
 		public IQuery<T> Translate(string filter, string orderBy)
 		{
 			// Translate the filter
@@ -55,6 +84,10 @@ namespace Skyline.DataMiner.SDM.OData
 			return _query;
 		}
 
+		/// <summary>
+		/// Translates a filter node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
 		public override void VisitFilter(FilterNode node)
 		{
 			// Start of all filters
@@ -63,6 +96,10 @@ namespace Skyline.DataMiner.SDM.OData
 			Visit(node.Filter);
 		}
 
+		/// <summary>
+		/// Translates an AND node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
 		public override void VisitAnd(AndNode node)
 		{
 			var andFilters = new List<FilterElement<T>>();
@@ -76,6 +113,10 @@ namespace Skyline.DataMiner.SDM.OData
 			_filter = new ANDFilterElement<T>(andFilters.ToArray());
 		}
 
+		/// <summary>
+		/// Translates an OR node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
 		public override void VisitOr(OrNode node)
 		{
 			var orFilters = new List<FilterElement<T>>();
@@ -89,12 +130,21 @@ namespace Skyline.DataMiner.SDM.OData
 			_filter = new ORFilterElement<T>(orFilters.ToArray());
 		}
 
+		/// <summary>
+		/// Translates a NOT node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
 		public override void VisitNot(NotNode node)
 		{
 			Visit(node.Child);
 			_filter = _filter.NOT();
 		}
 
+		/// <summary>
+		/// Translates a function call node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when the function is not supported.</exception>
 		public override void VisitFunctionCall(FunctionCallNode node)
 		{
 			switch (node.Name)
@@ -118,6 +168,11 @@ namespace Skyline.DataMiner.SDM.OData
 			}
 		}
 
+		/// <summary>
+		/// Translates a method call node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when the method is not supported.</exception>
 		public override void VisitMethodCall(MethodCallNode node)
 		{
 			switch (node.Name)
@@ -144,6 +199,11 @@ namespace Skyline.DataMiner.SDM.OData
 			}
 		}
 
+		/// <summary>
+		/// Translates a binary node into the current SDM filter state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when the comparison is not supported.</exception>
 		public override void VisitBinary(BinaryNode node)
 		{
 			if (!_resolver.TryGetOperand(node, out var comparer))
@@ -160,6 +220,11 @@ namespace Skyline.DataMiner.SDM.OData
 			_filter = FilterElementFactory.Create<T>(exposer!, comparer, ODataExposerResolver.ParseLiteral(exposer!.FieldType, literal!));
 		}
 
+		/// <summary>
+		/// Translates an order node into the current SDM query state.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when the order expression is not supported.</exception>
 		public override void VisitOrder(OrderNode node)
 		{
 			if (node.Order == ODataOrder.None)

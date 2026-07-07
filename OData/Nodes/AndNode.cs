@@ -5,6 +5,9 @@ namespace Skyline.DataMiner.SDM.OData
 	using System.Collections.ObjectModel;
 	using System.Linq;
 
+	/// <summary>
+	/// Represents a logical AND node in the OData syntax tree.
+	/// </summary>
 	public class AndNode : ODataNode<AndNode>
 	{
 		internal AndNode(IEnumerable<ODataNode> nodes, ODataNode? parent)
@@ -19,8 +22,17 @@ namespace Skyline.DataMiner.SDM.OData
 			Nodes = new ReadOnlyCollection<ODataNode>(list);
 		}
 
+		/// <summary>
+		/// Gets the child nodes.
+		/// </summary>
 		public IReadOnlyCollection<ODataNode> Nodes { get; }
 
+		/// <summary>
+		/// Returns a copy of this node with the specified child nodes and parent.
+		/// </summary>
+		/// <param name="nodes">The child nodes.</param>
+		/// <param name="parent">The parent node.</param>
+		/// <returns>The updated node.</returns>
 		public AndNode Update(IEnumerable<ODataNode> nodes, ODataNode? parent)
 		{
 			if (nodes != Nodes || parent != Parent)
@@ -32,11 +44,21 @@ namespace Skyline.DataMiner.SDM.OData
 			return this;
 		}
 
+		/// <summary>
+		/// Returns a copy of this node with the specified child nodes.
+		/// </summary>
+		/// <param name="nodes">The child nodes.</param>
+		/// <returns>The updated node.</returns>
 		public AndNode WithNodes(IEnumerable<ODataNode> nodes)
 		{
 			return Update(nodes, Parent);
 		}
 
+		/// <summary>
+		/// Returns a copy of this node with the specified child node appended.
+		/// </summary>
+		/// <param name="node">The child node to add.</param>
+		/// <returns>The updated node.</returns>
 		public AndNode AddNode(ODataNode node)
 		{
 			var nodes = Nodes.ToList();
@@ -44,11 +66,20 @@ namespace Skyline.DataMiner.SDM.OData
 			return Update(new ReadOnlyCollection<ODataNode>(nodes), Parent);
 		}
 
+		/// <summary>
+		/// Accepts the specified visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor to accept.</param>
 		public override void Accept(IODataVisitor visitor)
 		{
 			visitor.VisitAnd(this);
 		}
 
+		/// <summary>
+		/// Returns a copy of this node with the specified parent.
+		/// </summary>
+		/// <param name="parent">The parent node.</param>
+		/// <returns>The updated node.</returns>
 		protected internal override ODataNode WithParentInternal(ODataNode? parent)
 		{
 			return Update(Nodes, parent);

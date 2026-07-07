@@ -1,5 +1,8 @@
 namespace Skyline.DataMiner.SDM.OData
 {
+	/// <summary>
+	/// Represents an OData primitive type.
+	/// </summary>
 	public enum ODataPrimitiveType
 	{
 		/// <summary>
