@@ -168,6 +168,16 @@
 
 		public static object ParseLiteral(Type type, LiteralNode literal)
 		{
+			if (Nullable.GetUnderlyingType(type) is Type underlying)
+			{
+				if (literal.Value is null || string.Equals(Convert.ToString(literal.Value), "null", StringComparison.OrdinalIgnoreCase))
+				{
+					return null;
+				}
+
+				return ParseLiteral(underlying, literal);
+			}
+
 			TryGetCollectionElementType(type, out var elementType);
 
 			if (type == typeof(string) ||
@@ -267,18 +277,6 @@
 				}
 
 				return constructor.Invoke(new object[] { identifier });
-			}
-			else if (Nullable.GetUnderlyingType(type) is Type underlying)
-			{
-				// Handle nullable types
-				if (string.Equals(literal.Value?.ToString(), "null", StringComparison.OrdinalIgnoreCase))
-				{
-					return null;
-				}
-				else
-				{
-					return ParseLiteral(underlying, literal);
-				}
 			}
 			else
 			{

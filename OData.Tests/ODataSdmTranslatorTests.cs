@@ -30,7 +30,9 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 
 		public string Name { get; set; }
 
-		public int Age { get; }
+		public int Age { get; set; }
+
+		public double? Weight { get; set; }
 
 		public ICollection<string> Aliases { get; } = new List<string>();
 
@@ -68,6 +70,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public static readonly Exposer<Person, string> Identifier = new Exposer<Person, string>((obj) => obj.Identifier, "Identifier");
 		public static readonly Exposer<Person, string> Name = new Exposer<Person, string>((obj) => obj.Name, "Name");
 		public static readonly Exposer<Person, int> Age = new Exposer<Person, int>((obj) => obj.Age, "Age");
+		public static readonly Exposer<Person, double?> Weight = new Exposer<Person, double?>((obj) => obj.Weight, "Weight");
 		public static readonly CollectionExposer<Person, string> Aliases = new CollectionExposer<Person, string>((obj) => obj.Aliases.Where(x => x is not null), "Aliases");
 		public static readonly Exposer<Person, SdmObjectReference<Person>> Mother = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.Mother, "Mother");
 		public static readonly Exposer<Person, SdmObjectReference<Person>> Father = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.Father, "Father");
@@ -178,6 +181,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 
 		[TestMethod]
 		[DataRow("Person 001")]
+		[DataRow("2f46daec-421a-491a-a1ac-7ec4a4d01494")]
 		public void SubProperty_Resolves_To_RootProperty_With_Matching_Name(string identifier)
 		{
 			// Arrange
@@ -314,6 +318,53 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			// Arrange
 			var expectedFilter = PersonExposers.Age.LessThanOrEqual(age);
 			var odataFilter = $"Age le {age}";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow(72d)]
+		[DataRow(0d)]
+		public void Nullable_Number_Equal(double weight)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.Weight.Equal(weight);
+			var odataFilter = $"Weight eq {weight}";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		public void Nullable_Number_Equal_Null()
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.Weight.HasNoValue();
+			var odataFilter = "Weight eq null";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		public void Nullable_Number_NotEqual_Null()
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.Weight.HasValue();
+			var odataFilter = "Weight ne null";
 
 			// Act
 			var translator = new ODataSdmTranslator<Person>();

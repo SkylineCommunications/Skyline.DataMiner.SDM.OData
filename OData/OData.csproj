@@ -42,11 +42,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Skyline.DataMiner.CICD.CSharpAnalysis.Analyzer">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="Skyline.DataMiner.CICD.CSharpAnalysis.Analyzer" PrivateAssets="all">
+			<IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Skyline.DataMiner.Utils.SecureCoding.Analyzers">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="Skyline.DataMiner.Utils.SecureCoding.Analyzers" PrivateAssets="all">
+			<IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
