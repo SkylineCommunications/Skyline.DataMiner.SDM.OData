@@ -50,6 +50,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public string ExternalID { get; set; }
 
 		public string ExternalName { get; set; }
+
+		public SdmObjectReference<Person> MyPersonTest { get; set; }
 	}
 
 	public class GrandParents
@@ -79,6 +81,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			public static readonly CollectionExposer<Person, string> ExternalID = new CollectionExposer<Person, string>((obj) => obj.ExternalIdentifiers.Where(x => x.ExternalID is not null).Select(x => x.ExternalID), "ExternalIdentifiers.ExternalID");
 			public static readonly CollectionExposer<Person, string> ExternalName = new CollectionExposer<Person, string>((obj) => obj.ExternalIdentifiers.Where(x => x.ExternalID is not null).Select(x => x.ExternalName), "ExternalIdentifiers.ExternalName");
+			public static readonly CollectionExposer<Person, SdmObjectReference<Person>> MyPersonTest = new CollectionExposer<Person, SdmObjectReference<Person>>((obj) => obj.ExternalIdentifiers.Where(x => x.MyPersonTest != null).Select(x => x.MyPersonTest), "ExternalIdentifiers.MyPersonTest");
 		}
 
 		public static class GrandParents
@@ -93,6 +96,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 	[TestClass]
 	public class ODataSdmTranslatorTests
 	{
+
 		private static List<Person> _people = new List<Person>
 		{
 			new Person("Person 001", "Andi Tamer", 105)
@@ -108,6 +112,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 					{
 						ExternalID = "e001",
 						ExternalName = "EXT Andi Tamer",
+						MyPersonTest = new SdmObjectReference<Person>(Guid.NewGuid().ToString()),
 					},
 				},
 			},
@@ -124,6 +129,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 					{
 						ExternalID = "p002",
 						ExternalName = "EXT John Doe",
+						MyPersonTest = new SdmObjectReference<Person>(Guid.NewGuid().ToString()),
 					},
 				},
 			},
@@ -140,6 +146,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 					{
 						ExternalID = "p003",
 						ExternalName = "SQUAD Fiber",
+						MyPersonTest = new SdmObjectReference<Person>(Guid.NewGuid().ToString()),
 					},
 				},
 				Mother = new SdmObjectReference<Person>("Person 001"),
@@ -460,6 +467,24 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 				PersonExposers.ExternalIdentifiers.ExternalID.Contains("p"),
 				PersonExposers.ExternalIdentifiers.ExternalName.Contains("EXT"));
 			var odataFilter = "ExternalIdentifiers/any(e: contains(e/ExternalID, 'p') and contains(e/ExternalName, 'EXT'))";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow("Person 001")]
+		[DataRow("2f46daec-421a-491a-a1ac-7ec4a4d01494")]
+		public void Collection_Any_With_SdmObjectReference(string identifier)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.ExternalIdentifiers.MyPersonTest
+				.Equal(new SdmObjectReference<Person>(identifier));
+			var odataFilter = $"ExternalIdentifiers/any(e: e/MyPersonTest eq '{identifier}')";
 
 			// Act
 			var translator = new ODataSdmTranslator<Person>();
