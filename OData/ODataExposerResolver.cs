@@ -263,17 +263,22 @@
 			else if (type.IsEnum ||
 				(elementType?.IsEnum ?? false))
 			{
-				return Enum.Parse(type, Convert.ToString(literal.Value));
+				var enumType = type.IsEnum ? type : elementType;
+				return Enum.Parse(enumType, Convert.ToString(literal.Value));
 			}
 			else if ((type.IsGenericType && type.GetGenericTypeDefinition().FullName == "Skyline.DataMiner.SDM.SdmObjectReference`1") ||
 				((elementType?.IsGenericType ?? false) && elementType?.GetGenericTypeDefinition().FullName == "Skyline.DataMiner.SDM.SdmObjectReference`1"))
 			{
 				// Handle SdmObjectReference<T>
+				var sdmObjectReferenceType = type.IsGenericType && type.GetGenericTypeDefinition().FullName == "Skyline.DataMiner.SDM.SdmObjectReference`1"
+					? type
+					: elementType;
+
 				var identifier = Convert.ToString(literal.Value);
-				var constructor = type.GetConstructor(new Type[] { typeof(string) });
+				var constructor = sdmObjectReferenceType.GetConstructor(new Type[] { typeof(string) });
 				if (constructor == null)
 				{
-					throw new NotSupportedException($"No suitable constructor found for type: {type.FullName}");
+					throw new NotSupportedException($"No suitable constructor found for type: {sdmObjectReferenceType.FullName}");
 				}
 
 				return constructor.Invoke(new object[] { identifier });
