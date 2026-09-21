@@ -7,7 +7,7 @@
 		<!--Runtime-->
 		<PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageVersion Include="Skyline.DataMiner.Dev.Automation" Version="10.5.9.2" />
-		<PackageVersion Include="Skyline.DataMiner.Dev.Utils.SDM.Abstractions" Version="1.0.3" />
+		<PackageVersion Include="Skyline.DataMiner.Dev.Utils.SDM.Abstractions" Version="1.0.4" />
 		<!--Testing-->
 		<PackageVersion Include="MSTest" Version="4.3.3" />
 		<PackageVersion Include="FluentAssertions" Version="7.2.2" />
