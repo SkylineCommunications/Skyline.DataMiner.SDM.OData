@@ -16,7 +16,7 @@ updates:
       - dependency-name: "FluentAssertions"
         versions: [ ">=8.0.0" ]
 
-		# Verify.MSTest equal to or higher than 32.0.0 are a different license, which requires payment
+      # Verify.MSTest equal to or higher than 32.0.0 are a different license, which requires payment
       - dependency-name: "Verify.MSTest"
         versions: [ ">32.0.0" ]
         
