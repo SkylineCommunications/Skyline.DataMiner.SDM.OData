@@ -3,6 +3,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using System.Runtime.CompilerServices;
 
 	using FluentAssertions;
@@ -15,7 +16,6 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 	using Skyline.DataMiner.SDM.OData.Tests.Equality;
 
 	using SLDataGateway.API.Querying;
-	using SLDataGateway.API.Types.Querying;
 
 	public class Person : SdmObject<Person>
 	{
@@ -64,12 +64,19 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public SdmObjectReference<Person> MyPersonTest { get; set; }
 	}
 
+	public enum Gender
+	{
+		Male,
+		Female,
+	}
+
 	public class GrandParents
 	{
 		public SdmObjectReference<Person> MaternalGrandMother { get; set; }
 		public SdmObjectReference<Person> MaternalGrandFather { get; set; }
 		public SdmObjectReference<Person> PaternalGrandMother { get; set; }
 		public SdmObjectReference<Person> PaternalGrandFather { get; set; }
+		public List<Gender> Genders { get; set; } = new List<Gender>();
 	}
 
 	public static class PersonExposers
@@ -101,6 +108,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			public static readonly Exposer<Person, SdmObjectReference<Person>> MaternalGrandFather = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.MaternalGrandFather, "GrandParents.MaternalGrandFather");
 			public static readonly Exposer<Person, SdmObjectReference<Person>> PaternalGrandMother = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.PaternalGrandMother, "GrandParents.PaternalGrandMother");
 			public static readonly Exposer<Person, SdmObjectReference<Person>> PaternalGrandFather = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.PaternalGrandFather, "GrandParents.PaternalGrandFather");
+			public static readonly CollectionExposer<Person, Gender> Genders = new CollectionExposer<Person, Gender>((obj) => obj.GrandParents.Genders, "GrandParents.Genders");
 		}
 	}
 
@@ -499,6 +507,24 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			var expectedFilter = PersonExposers.ExternalIdentifiers.MyPersonTest
 				.Equal(new SdmObjectReference<Person>(identifier));
 			var odataFilter = $"ExternalIdentifiers/any(e: e/MyPersonTest eq '{identifier}')";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow(Gender.Male)]
+		[DataRow(Gender.Female)]
+		public void Collection_Any_With_SubList_Enum(Gender enumValue)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.GrandParents.Genders
+				.Equal(enumValue);
+			var odataFilter = $"GrandParents/Genders/any(e: e eq '{enumValue}')";
 
 			// Act
 			var translator = new ODataSdmTranslator<Person>();
