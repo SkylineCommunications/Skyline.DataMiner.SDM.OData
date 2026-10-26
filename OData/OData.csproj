@@ -28,6 +28,7 @@
 		<Deterministic>false</Deterministic>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<WarningsAsErrors>$(WarningsAsErrors);RS0016;RS0017;RS0024;RS0025;RS0036;RS0037;RS0041;RS0048;RS0050</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -42,6 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" PrivateAssets="all" />
 		<PackageReference Include="Skyline.DataMiner.CICD.CSharpAnalysis.Analyzer" PrivateAssets="all">
 			<IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

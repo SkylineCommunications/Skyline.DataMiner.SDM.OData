@@ -3,6 +3,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using System.Runtime.CompilerServices;
 
 	using FluentAssertions;
@@ -15,7 +16,6 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 	using Skyline.DataMiner.SDM.OData.Tests.Equality;
 
 	using SLDataGateway.API.Querying;
-	using SLDataGateway.API.Types.Querying;
 
 	public class Person : SdmObject<Person>
 	{
@@ -47,9 +47,27 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 
 	public class ExternalIdentifier
 	{
+		public enum ExternalIdentifierType
+		{
+			Unknown,
+			SSO,
+			LDAP,
+			Custom,
+		}
+
+		public ExternalIdentifierType Type { get; set; }
+
 		public string ExternalID { get; set; }
 
 		public string ExternalName { get; set; }
+
+		public SdmObjectReference<Person> MyPersonTest { get; set; }
+	}
+
+	public enum Gender
+	{
+		Male,
+		Female,
 	}
 
 	public class GrandParents
@@ -58,6 +76,7 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		public SdmObjectReference<Person> MaternalGrandFather { get; set; }
 		public SdmObjectReference<Person> PaternalGrandMother { get; set; }
 		public SdmObjectReference<Person> PaternalGrandFather { get; set; }
+		public List<Gender> Genders { get; set; } = new List<Gender>();
 	}
 
 	public static class PersonExposers
@@ -79,6 +98,8 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		{
 			public static readonly CollectionExposer<Person, string> ExternalID = new CollectionExposer<Person, string>((obj) => obj.ExternalIdentifiers.Where(x => x.ExternalID is not null).Select(x => x.ExternalID), "ExternalIdentifiers.ExternalID");
 			public static readonly CollectionExposer<Person, string> ExternalName = new CollectionExposer<Person, string>((obj) => obj.ExternalIdentifiers.Where(x => x.ExternalID is not null).Select(x => x.ExternalName), "ExternalIdentifiers.ExternalName");
+			public static readonly CollectionExposer<Person, ExternalIdentifier.ExternalIdentifierType> Type = new CollectionExposer<Person, ExternalIdentifier.ExternalIdentifierType>((obj) => obj.ExternalIdentifiers.Select(x => x.Type), "ExternalIdentifiers.Type");
+			public static readonly CollectionExposer<Person, SdmObjectReference<Person>> MyPersonTest = new CollectionExposer<Person, SdmObjectReference<Person>>((obj) => obj.ExternalIdentifiers.Where(x => x.MyPersonTest != null).Select(x => x.MyPersonTest), "ExternalIdentifiers.MyPersonTest");
 		}
 
 		public static class GrandParents
@@ -87,12 +108,14 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			public static readonly Exposer<Person, SdmObjectReference<Person>> MaternalGrandFather = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.MaternalGrandFather, "GrandParents.MaternalGrandFather");
 			public static readonly Exposer<Person, SdmObjectReference<Person>> PaternalGrandMother = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.PaternalGrandMother, "GrandParents.PaternalGrandMother");
 			public static readonly Exposer<Person, SdmObjectReference<Person>> PaternalGrandFather = new Exposer<Person, SdmObjectReference<Person>>((obj) => obj.GrandParents.PaternalGrandFather, "GrandParents.PaternalGrandFather");
+			public static readonly CollectionExposer<Person, Gender> Genders = new CollectionExposer<Person, Gender>((obj) => obj.GrandParents.Genders, "GrandParents.Genders");
 		}
 	}
 
 	[TestClass]
 	public class ODataSdmTranslatorTests
 	{
+
 		private static List<Person> _people = new List<Person>
 		{
 			new Person("Person 001", "Andi Tamer", 105)
@@ -106,8 +129,10 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 				{
 					new ExternalIdentifier
 					{
+						Type = ExternalIdentifier.ExternalIdentifierType.Custom,
 						ExternalID = "e001",
 						ExternalName = "EXT Andi Tamer",
+						MyPersonTest = new SdmObjectReference<Person>(Guid.NewGuid().ToString()),
 					},
 				},
 			},
@@ -122,8 +147,10 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 				{
 					new ExternalIdentifier
 					{
+						Type = ExternalIdentifier.ExternalIdentifierType.SSO,
 						ExternalID = "p002",
 						ExternalName = "EXT John Doe",
+						MyPersonTest = new SdmObjectReference<Person>(Guid.NewGuid().ToString()),
 					},
 				},
 			},
@@ -138,8 +165,10 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 				{
 					new ExternalIdentifier
 					{
+						Type = ExternalIdentifier.ExternalIdentifierType.LDAP,
 						ExternalID = "p003",
 						ExternalName = "SQUAD Fiber",
+						MyPersonTest = new SdmObjectReference<Person>(Guid.NewGuid().ToString()),
 					},
 				},
 				Mother = new SdmObjectReference<Person>("Person 001"),
@@ -460,6 +489,62 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 				PersonExposers.ExternalIdentifiers.ExternalID.Contains("p"),
 				PersonExposers.ExternalIdentifiers.ExternalName.Contains("EXT"));
 			var odataFilter = "ExternalIdentifiers/any(e: contains(e/ExternalID, 'p') and contains(e/ExternalName, 'EXT'))";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow("Person 001")]
+		[DataRow("2f46daec-421a-491a-a1ac-7ec4a4d01494")]
+		public void Collection_Any_With_SdmObjectReference(string identifier)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.ExternalIdentifiers.MyPersonTest
+				.Equal(new SdmObjectReference<Person>(identifier));
+			var odataFilter = $"ExternalIdentifiers/any(e: e/MyPersonTest eq '{identifier}')";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow(Gender.Male)]
+		[DataRow(Gender.Female)]
+		public void Collection_Any_With_SubList_Enum(Gender enumValue)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.GrandParents.Genders
+				.Equal(enumValue);
+			var odataFilter = $"GrandParents/Genders/any(e: e eq '{enumValue}')";
+
+			// Act
+			var translator = new ODataSdmTranslator<Person>();
+			var filter = translator.TranslateFilter(odataFilter);
+
+			// Assert
+			filter.Should().Be(expectedFilter);
+		}
+
+		[TestMethod]
+		[DataRow(ExternalIdentifier.ExternalIdentifierType.SSO)]
+		[DataRow(ExternalIdentifier.ExternalIdentifierType.LDAP)]
+		[DataRow(ExternalIdentifier.ExternalIdentifierType.Custom)]
+		[DataRow(ExternalIdentifier.ExternalIdentifierType.Unknown)]
+		public void Collection_Any_With_Enum(ExternalIdentifier.ExternalIdentifierType enumValue)
+		{
+			// Arrange
+			var expectedFilter = PersonExposers.ExternalIdentifiers.Type
+				.Equal(enumValue);
+			var odataFilter = $"ExternalIdentifiers/any(e: e/Type eq '{enumValue}')";
 
 			// Act
 			var translator = new ODataSdmTranslator<Person>();

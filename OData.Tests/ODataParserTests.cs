@@ -358,6 +358,36 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		public void Collection_Any_DOL()
+		{
+			//
+			var id = Guid.NewGuid();
+			var filter = $"ExternalIdentifiers/any(e: e/MyPersonTest eq '{id}')";
+			// Act
+			var tree = ODataFilterParser.Parse(filter);
+
+			// Assert
+			tree.Should().BeOfType<FilterNode>();
+			var filterNode = tree.As<FilterNode>();
+			filterNode.Filter.Should().BeOfType<MethodCallNode>();
+
+			var methodCallNode = tree.Filter.As<MethodCallNode>();
+			methodCallNode.Target.Should().BeOfType<PropertyNode>();
+			methodCallNode.Variable.Should().BeOfType<PropertyNode>();
+			methodCallNode.Body.Should().BeOfType<BinaryNode>();
+			methodCallNode.Parent.Should().Be(filterNode);
+
+			var binaryNode = methodCallNode.Body.As<BinaryNode>();
+			binaryNode.Left.Should().BeOfType<PropertyNode>();
+			binaryNode.Left.As<PropertyNode>().Path.Should().Be("e/MyPersonTest");
+			binaryNode.Operation.Should().Be(ODataLogicalOperation.Equal);
+			binaryNode.Right.Should().BeOfType<LiteralNode>();
+			binaryNode.Right.As<LiteralNode>().Type.Should().Be(ODataPrimitiveType.String);
+			binaryNode.Right.As<LiteralNode>().Value.Should().Be(id.ToString());
+			binaryNode.Parent.Should().Be(methodCallNode);
+		}
+
+		[TestMethod]
 		public void SubProperty_Path_Outside_Lambda_Is_Kept_As_Single_Path()
 		{
 			// Arrange
