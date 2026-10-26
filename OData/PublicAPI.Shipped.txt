@@ -1,0 +1,180 @@
+﻿#nullable enable
+abstract Skyline.DataMiner.SDM.OData.ODataNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+abstract Skyline.DataMiner.SDM.OData.ODataNode.WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.ODataNode!
+override Skyline.DataMiner.SDM.OData.AndNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.BinaryNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.FilterNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.FunctionCallNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.FunctionCallNode.WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.ODataNode!
+override Skyline.DataMiner.SDM.OData.LiteralNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.MethodCallNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.MethodCallNode.WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.ODataNode!
+override Skyline.DataMiner.SDM.OData.NotNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitAnd(Skyline.DataMiner.SDM.OData.AndNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitNot(Skyline.DataMiner.SDM.OData.NotNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitOr(Skyline.DataMiner.SDM.OData.OrNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitAnd(Skyline.DataMiner.SDM.OData.AndNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitOr(Skyline.DataMiner.SDM.OData.OrNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode! node) -> void
+override Skyline.DataMiner.SDM.OData.OrderNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.OrderNode.WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.ODataNode!
+override Skyline.DataMiner.SDM.OData.OrNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.PropertyNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+override Skyline.DataMiner.SDM.OData.PropertyNode.WithParentInternal(Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.ODataNode!
+Skyline.DataMiner.SDM.OData.AndNode
+Skyline.DataMiner.SDM.OData.AndNode.AddNode(Skyline.DataMiner.SDM.OData.ODataNode! node) -> Skyline.DataMiner.SDM.OData.AndNode!
+Skyline.DataMiner.SDM.OData.AndNode.Nodes.get -> System.Collections.Generic.IReadOnlyCollection<Skyline.DataMiner.SDM.OData.ODataNode!>!
+Skyline.DataMiner.SDM.OData.AndNode.Update(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! nodes, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.AndNode!
+Skyline.DataMiner.SDM.OData.AndNode.WithNodes(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! nodes) -> Skyline.DataMiner.SDM.OData.AndNode!
+Skyline.DataMiner.SDM.OData.BinaryNode
+Skyline.DataMiner.SDM.OData.BinaryNode.Left.get -> Skyline.DataMiner.SDM.OData.ODataNode!
+Skyline.DataMiner.SDM.OData.BinaryNode.Operation.get -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.BinaryNode.Right.get -> Skyline.DataMiner.SDM.OData.ODataNode!
+Skyline.DataMiner.SDM.OData.BinaryNode.Update(Skyline.DataMiner.SDM.OData.ODataNode! left, Skyline.DataMiner.SDM.OData.ODataLogicalOperation operation, Skyline.DataMiner.SDM.OData.ODataNode! right, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.BinaryNode!
+Skyline.DataMiner.SDM.OData.BinaryNode.WithLeft(Skyline.DataMiner.SDM.OData.ODataNode! left) -> Skyline.DataMiner.SDM.OData.BinaryNode!
+Skyline.DataMiner.SDM.OData.BinaryNode.WithOperation(Skyline.DataMiner.SDM.OData.ODataLogicalOperation operation) -> Skyline.DataMiner.SDM.OData.BinaryNode!
+Skyline.DataMiner.SDM.OData.BinaryNode.WithRight(Skyline.DataMiner.SDM.OData.ODataNode! right) -> Skyline.DataMiner.SDM.OData.BinaryNode!
+Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException
+Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException.ODataParseException() -> void
+Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException.ODataParseException(string! message) -> void
+Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException.ODataParseException(string! message, System.Exception! innerException) -> void
+Skyline.DataMiner.SDM.OData.Exceptions.ODataParseException.ODataParseException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+Skyline.DataMiner.SDM.OData.FilterNode
+Skyline.DataMiner.SDM.OData.FilterNode.Filter.get -> Skyline.DataMiner.SDM.OData.ODataNode?
+Skyline.DataMiner.SDM.OData.FilterNode.Update(Skyline.DataMiner.SDM.OData.ODataNode? filter) -> Skyline.DataMiner.SDM.OData.FilterNode!
+Skyline.DataMiner.SDM.OData.FilterNode.WithFilter(Skyline.DataMiner.SDM.OData.ODataNode? filter) -> Skyline.DataMiner.SDM.OData.FilterNode!
+Skyline.DataMiner.SDM.OData.FunctionCallNode
+Skyline.DataMiner.SDM.OData.FunctionCallNode.AddArgument(Skyline.DataMiner.SDM.OData.ODataNode! argument) -> Skyline.DataMiner.SDM.OData.FunctionCallNode!
+Skyline.DataMiner.SDM.OData.FunctionCallNode.Arguments.get -> System.Collections.Generic.IReadOnlyList<Skyline.DataMiner.SDM.OData.ODataNode!>!
+Skyline.DataMiner.SDM.OData.FunctionCallNode.FunctionCallNode(string! methodName, System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! arguments, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> void
+Skyline.DataMiner.SDM.OData.FunctionCallNode.Name.get -> string!
+Skyline.DataMiner.SDM.OData.FunctionCallNode.Update(string! methodName, System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! arguments, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.FunctionCallNode!
+Skyline.DataMiner.SDM.OData.FunctionCallNode.WithArgument(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! arguments) -> Skyline.DataMiner.SDM.OData.FunctionCallNode!
+Skyline.DataMiner.SDM.OData.FunctionCallNode.WithName(string! methodName) -> Skyline.DataMiner.SDM.OData.FunctionCallNode!
+Skyline.DataMiner.SDM.OData.IODataNode
+Skyline.DataMiner.SDM.OData.IODataNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void
+Skyline.DataMiner.SDM.OData.IODataNode.Parent.get -> Skyline.DataMiner.SDM.OData.ODataNode?
+Skyline.DataMiner.SDM.OData.IODataVisitor
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitAnd(Skyline.DataMiner.SDM.OData.AndNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitLiteral(Skyline.DataMiner.SDM.OData.LiteralNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitNot(Skyline.DataMiner.SDM.OData.NotNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitOr(Skyline.DataMiner.SDM.OData.OrNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode! node) -> void
+Skyline.DataMiner.SDM.OData.IODataVisitor.VisitProperty(Skyline.DataMiner.SDM.OData.PropertyNode! node) -> void
+Skyline.DataMiner.SDM.OData.LiteralNode
+Skyline.DataMiner.SDM.OData.LiteralNode.Type.get -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.LiteralNode.Update(Skyline.DataMiner.SDM.OData.ODataPrimitiveType type, object! value, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> Skyline.DataMiner.SDM.OData.LiteralNode!
+Skyline.DataMiner.SDM.OData.LiteralNode.Value.get -> object!
+Skyline.DataMiner.SDM.OData.LiteralNode.WithType(Skyline.DataMiner.SDM.OData.ODataPrimitiveType type) -> Skyline.DataMiner.SDM.OData.LiteralNode!
+Skyline.DataMiner.SDM.OData.LiteralNode.WithValue(object! value) -> Skyline.DataMiner.SDM.OData.LiteralNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode
+Skyline.DataMiner.SDM.OData.MethodCallNode.Body.get -> Skyline.DataMiner.SDM.OData.ODataNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.MethodCallNode(string! methodName, Skyline.DataMiner.SDM.OData.PropertyNode! target, Skyline.DataMiner.SDM.OData.PropertyNode! variable, Skyline.DataMiner.SDM.OData.ODataNode! body, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> void
+Skyline.DataMiner.SDM.OData.MethodCallNode.Name.get -> string!
+Skyline.DataMiner.SDM.OData.MethodCallNode.Target.get -> Skyline.DataMiner.SDM.OData.PropertyNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.Update(string! methodName, Skyline.DataMiner.SDM.OData.PropertyNode! target, Skyline.DataMiner.SDM.OData.PropertyNode! variable, Skyline.DataMiner.SDM.OData.ODataNode! body, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.MethodCallNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.Variable.get -> Skyline.DataMiner.SDM.OData.PropertyNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.WithBody(Skyline.DataMiner.SDM.OData.ODataNode! body) -> Skyline.DataMiner.SDM.OData.MethodCallNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.WithName(string! methodName) -> Skyline.DataMiner.SDM.OData.MethodCallNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.WithTarget(Skyline.DataMiner.SDM.OData.PropertyNode! target) -> Skyline.DataMiner.SDM.OData.MethodCallNode!
+Skyline.DataMiner.SDM.OData.MethodCallNode.WithVariable(Skyline.DataMiner.SDM.OData.PropertyNode! variable) -> Skyline.DataMiner.SDM.OData.MethodCallNode!
+Skyline.DataMiner.SDM.OData.NotNode
+Skyline.DataMiner.SDM.OData.NotNode.Child.get -> Skyline.DataMiner.SDM.OData.ODataNode!
+Skyline.DataMiner.SDM.OData.NotNode.Operation.get -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.NotNode.Update(Skyline.DataMiner.SDM.OData.ODataNode! child, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.NotNode!
+Skyline.DataMiner.SDM.OData.NotNode.WithChild(Skyline.DataMiner.SDM.OData.ODataNode! child) -> Skyline.DataMiner.SDM.OData.NotNode!
+Skyline.DataMiner.SDM.OData.ODataFilterParser
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.And = 6 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.Equal = 0 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.GreaterThan = 2 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.GreaterThanOrEqual = 3 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.LessThan = 4 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.LessThanOrEqual = 5 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.Not = 8 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.NotEqual = 1 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataLogicalOperation.Or = 7 -> Skyline.DataMiner.SDM.OData.ODataLogicalOperation
+Skyline.DataMiner.SDM.OData.ODataNode
+Skyline.DataMiner.SDM.OData.ODataNode.ODataNode(Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> void
+Skyline.DataMiner.SDM.OData.ODataNode.Parent.get -> Skyline.DataMiner.SDM.OData.ODataNode?
+Skyline.DataMiner.SDM.OData.ODataNode<TNode>
+Skyline.DataMiner.SDM.OData.ODataNode<TNode>.ODataNode(Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> void
+Skyline.DataMiner.SDM.OData.ODataNode<TNode>.WithParent(Skyline.DataMiner.SDM.OData.ODataNode? parent) -> TNode!
+Skyline.DataMiner.SDM.OData.ODataOrder
+Skyline.DataMiner.SDM.OData.ODataOrder.Ascending = 1 -> Skyline.DataMiner.SDM.OData.ODataOrder
+Skyline.DataMiner.SDM.OData.ODataOrder.Descending = 2 -> Skyline.DataMiner.SDM.OData.ODataOrder
+Skyline.DataMiner.SDM.OData.ODataOrder.None = 0 -> Skyline.DataMiner.SDM.OData.ODataOrder
+Skyline.DataMiner.SDM.OData.ODataOrderByParser
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Binary = 1 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Boolean = 2 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Byte = 3 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.DateTime = 14 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.DateTimeOffset = 15 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Decimal = 5 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Double = 6 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Guid = 8 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Int16 = 9 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Int32 = 10 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Int64 = 11 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Null = 0 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.SByte = 4 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Single = 7 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.String = 12 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataPrimitiveType.Time = 13 -> Skyline.DataMiner.SDM.OData.ODataPrimitiveType
+Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>
+Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.ODataSdmTranslator() -> void
+Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.Translate(string! filter, string! orderBy) -> SLDataGateway.API.Types.Querying.IQuery<T!>!
+Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.TranslateFilter(string! filter) -> Skyline.DataMiner.Net.Messages.SLDataGateway.FilterElement<T!>!
+Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.TranslateOrderBy(string! orderBy) -> SLDataGateway.API.Types.Querying.IQuery<T!>!
+Skyline.DataMiner.SDM.OData.ODataVisitor
+Skyline.DataMiner.SDM.OData.ODataVisitor.ODataVisitor() -> void
+Skyline.DataMiner.SDM.OData.ODataWalker
+Skyline.DataMiner.SDM.OData.ODataWalker.ODataWalker() -> void
+Skyline.DataMiner.SDM.OData.OrderNode
+Skyline.DataMiner.SDM.OData.OrderNode.Next.get -> Skyline.DataMiner.SDM.OData.OrderNode?
+Skyline.DataMiner.SDM.OData.OrderNode.Order.get -> Skyline.DataMiner.SDM.OData.ODataOrder
+Skyline.DataMiner.SDM.OData.OrderNode.OrderNode(Skyline.DataMiner.SDM.OData.PropertyNode! property, Skyline.DataMiner.SDM.OData.ODataOrder order, Skyline.DataMiner.SDM.OData.OrderNode? next, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> void
+Skyline.DataMiner.SDM.OData.OrderNode.Property.get -> Skyline.DataMiner.SDM.OData.PropertyNode!
+Skyline.DataMiner.SDM.OData.OrderNode.Update(Skyline.DataMiner.SDM.OData.PropertyNode! property, Skyline.DataMiner.SDM.OData.ODataOrder order, Skyline.DataMiner.SDM.OData.OrderNode? next, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.OrderNode!
+Skyline.DataMiner.SDM.OData.OrderNode.WithNext(Skyline.DataMiner.SDM.OData.OrderNode? next) -> Skyline.DataMiner.SDM.OData.OrderNode!
+Skyline.DataMiner.SDM.OData.OrderNode.WithOrder(Skyline.DataMiner.SDM.OData.ODataOrder order) -> Skyline.DataMiner.SDM.OData.OrderNode!
+Skyline.DataMiner.SDM.OData.OrderNode.WithProperty(Skyline.DataMiner.SDM.OData.PropertyNode! property) -> Skyline.DataMiner.SDM.OData.OrderNode!
+Skyline.DataMiner.SDM.OData.OrNode
+Skyline.DataMiner.SDM.OData.OrNode.AddNode(Skyline.DataMiner.SDM.OData.ODataNode! node) -> Skyline.DataMiner.SDM.OData.OrNode!
+Skyline.DataMiner.SDM.OData.OrNode.Nodes.get -> System.Collections.Generic.IReadOnlyCollection<Skyline.DataMiner.SDM.OData.ODataNode!>!
+Skyline.DataMiner.SDM.OData.OrNode.Update(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! nodes, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.OrNode!
+Skyline.DataMiner.SDM.OData.OrNode.WithNodes(System.Collections.Generic.IEnumerable<Skyline.DataMiner.SDM.OData.ODataNode!>! nodes) -> Skyline.DataMiner.SDM.OData.OrNode!
+Skyline.DataMiner.SDM.OData.PropertyNode
+Skyline.DataMiner.SDM.OData.PropertyNode.Path.get -> string!
+Skyline.DataMiner.SDM.OData.PropertyNode.PropertyNode(string! path, Skyline.DataMiner.SDM.OData.ODataNode? parent = null) -> void
+Skyline.DataMiner.SDM.OData.PropertyNode.Update(string! path, Skyline.DataMiner.SDM.OData.ODataNode? parent) -> Skyline.DataMiner.SDM.OData.PropertyNode!
+Skyline.DataMiner.SDM.OData.PropertyNode.WithPath(string! path) -> Skyline.DataMiner.SDM.OData.PropertyNode!
+static readonly Skyline.DataMiner.SDM.OData.FilterNode.Empty -> Skyline.DataMiner.SDM.OData.FilterNode!
+static Skyline.DataMiner.SDM.OData.ODataFilterParser.Parse(string! filter) -> Skyline.DataMiner.SDM.OData.FilterNode!
+static Skyline.DataMiner.SDM.OData.ODataOrderByParser.Parse(string! order) -> Skyline.DataMiner.SDM.OData.OrderNode!
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.DefaultVisit(Skyline.DataMiner.SDM.OData.ODataNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.Visit(Skyline.DataMiner.SDM.OData.ODataNode? node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitAnd(Skyline.DataMiner.SDM.OData.AndNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitLiteral(Skyline.DataMiner.SDM.OData.LiteralNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitNot(Skyline.DataMiner.SDM.OData.NotNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitOr(Skyline.DataMiner.SDM.OData.OrNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode! node) -> void
+virtual Skyline.DataMiner.SDM.OData.ODataVisitor.VisitProperty(Skyline.DataMiner.SDM.OData.PropertyNode! node) -> void

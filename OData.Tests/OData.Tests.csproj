@@ -11,17 +11,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" />
-		<PackageReference Include="PublicApiGenerator" />
-		<PackageReference Include="Verify.MSTest" />
 		<PackageReference Include="MSTest" />
 		<PackageReference Include="Skyline.DataMiner.Utils.DOM" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\OData\OData.csproj" />
+	  <ProjectReference Include="$(RootDir)\OData\OData.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="$(RootDir)\OData\PublicAPI.Unshipped.txt" LogicalName="PublicAPI.Unshipped.txt" />
 		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
 	</ItemGroup>
 
