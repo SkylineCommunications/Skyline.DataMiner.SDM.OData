@@ -59,7 +59,7 @@ namespace Skyline.DataMiner.SDM.OData
 			ODataNode? parent)
 		{
 			if (Name != methodName ||
-				Arguments.SequenceEqual(arguments) ||
+				!Arguments.SequenceEqual(arguments) ||
 				Parent != parent)
 			{
 				var newNode = new FunctionCallNode(methodName, arguments, parent);
