@@ -19,6 +19,9 @@ updates:
       # Verify.MSTest equal to or higher than 32.0.0 are a different license, which requires payment
       - dependency-name: "Verify.MSTest"
         versions: [ ">32.0.0" ]
+
+      - dependency-name: "Skyline.DataMiner.Utils.DOM"
+        versions: [ "<10.5.9" ]
         
       # DevPacks represents the DMA on which to compile. Doesn't make sense to always be on the latest version.
       - dependency-name: "Skyline.DataMiner.Files.*"
