@@ -11,11 +11,11 @@
 		<!--Testing-->
 		<PackageVersion Include="MSTest" Version="4.5.1" />
 		<PackageVersion Include="FluentAssertions" Version="7.2.2" />
-		<PackageVersion Include="Skyline.DataMiner.Utils.DOM" Version="10.5.2.8" />
+		<PackageVersion Include="Skyline.DataMiner.Utils.DOM" Version="10.6.1.1" />
 		<!--Analyzers-->
 		<PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" />
 		<PackageVersion Include="Skyline.DataMiner.CICD.CSharpAnalysis.Analyzer" Version="2.2.0" />
-		<PackageVersion Include="Skyline.DataMiner.Utils.SecureCoding.Analyzers" Version="2.2.3" />
+		<PackageVersion Include="Skyline.DataMiner.Utils.SecureCoding.Analyzers" Version="3.0.1" />
 		<PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
 	</ItemGroup>
 </Project>
