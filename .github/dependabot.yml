@@ -21,7 +21,7 @@ updates:
         versions: [ ">32.0.0" ]
 
       - dependency-name: "Skyline.DataMiner.Utils.DOM"
-        versions: [ "<10.5.9" ]
+        versions: [ ">10.5.9" ]
         
       # DevPacks represents the DMA on which to compile. Doesn't make sense to always be on the latest version.
       - dependency-name: "Skyline.DataMiner.Files.*"
