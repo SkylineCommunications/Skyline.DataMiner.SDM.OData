@@ -132,10 +132,23 @@ namespace Skyline.DataMiner.SDM.OData
 					throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Missing closing brace ')'");
 				}
 
+				if (_token.Type == ODataTokenType.Comma)
+				{
+					throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Expected a function argument.");
+				}
+
 				arguments.Add(ParseComparison(null));
 				if (_token.Type == ODataTokenType.Comma)
 				{
 					Next();
+					if (_token.Type == ODataTokenType.RightParenthesis)
+					{
+						throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Expected a function argument.");
+					}
+				}
+				else if (_token.Type != ODataTokenType.RightParenthesis)
+				{
+					throw new ODataParseException($"Unexpected token {_token} at {_token.Position}. Expected a comma or closing brace ')'");
 				}
 			}
 

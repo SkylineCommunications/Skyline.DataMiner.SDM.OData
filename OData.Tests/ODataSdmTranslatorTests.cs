@@ -285,6 +285,21 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		[DataRow("contains(Name)")]
+		[DataRow("contains(Name, 'Andi', 'Extra')")]
+		public void String_Contains_With_Invalid_Argument_Count_Throws(string odataFilter)
+		{
+			// Arrange
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
+		}
+
+		[TestMethod]
 		[DataRow(20)]
 		[DataRow(-5)]
 		[DataRow(0)]

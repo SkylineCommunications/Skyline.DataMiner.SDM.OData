@@ -151,6 +151,11 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				case "contains":
 				{
+					if (node.Arguments.Count != 2)
+					{
+						throw new NotSupportedException("Function 'contains' expects exactly two arguments.");
+					}
+
 					if (!_resolver.TryResolve(node.Arguments[0], out var exposer) ||
 						!_resolver.TryGetLiteral(node.Arguments[1], out var literal))
 					{
