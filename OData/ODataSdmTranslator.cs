@@ -200,6 +200,26 @@ namespace Skyline.DataMiner.SDM.OData
 		}
 
 		/// <summary>
+		/// Rejects a property used as a complete filter expression.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when a property is not part of a supported predicate.</exception>
+		public override void VisitProperty(PropertyNode node)
+		{
+			throw new NotSupportedException($"Unsupported filter expression: '{node.Path}'");
+		}
+
+		/// <summary>
+		/// Rejects a literal used as a complete filter expression.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when a literal is not part of a supported predicate.</exception>
+		public override void VisitLiteral(LiteralNode node)
+		{
+			throw new NotSupportedException("A literal cannot be used as a complete filter expression.");
+		}
+
+		/// <summary>
 		/// Translates a binary node into the current SDM filter state.
 		/// </summary>
 		/// <param name="node">The node to translate.</param>

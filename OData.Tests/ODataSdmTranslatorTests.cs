@@ -668,6 +668,24 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		[DataRow("Name")]
+		[DataRow("42")]
+		[DataRow("not Name")]
+		[DataRow("Name eq 'Andi Tamer' and Age")]
+		[DataRow("Name eq 'Andi Tamer' or Age")]
+		public void Incomplete_Filter_Expression_Throws(string odataFilter)
+		{
+			// Arrange
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
+		}
+
+		[TestMethod]
 		public void Comparing_Two_Properties_Throws()
 		{
 			// Arrange

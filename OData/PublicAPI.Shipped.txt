@@ -14,10 +14,12 @@ override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitAnd(Skyline.Data
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitLiteral(Skyline.DataMiner.SDM.OData.LiteralNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitNot(Skyline.DataMiner.SDM.OData.NotNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitOr(Skyline.DataMiner.SDM.OData.OrNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataSdmTranslator<T>.VisitProperty(Skyline.DataMiner.SDM.OData.PropertyNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitAnd(Skyline.DataMiner.SDM.OData.AndNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitBinary(Skyline.DataMiner.SDM.OData.BinaryNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
