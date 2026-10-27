@@ -179,10 +179,15 @@
 			{
 				if (literal.Value is null || string.Equals(Convert.ToString(literal.Value), "null", StringComparison.OrdinalIgnoreCase))
 				{
-					return null;
+					return null!;
 				}
 
 				return ParseLiteral(underlying, literal);
+			}
+
+			if (literal.Value is null && type.IsValueType)
+			{
+				throw new NotSupportedException($"Null is not supported for non-nullable type '{type.FullName}'.");
 			}
 
 			TryGetCollectionElementType(type, out var elementType);

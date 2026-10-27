@@ -404,6 +404,21 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		public void NonNullable_Number_Equal_Null_Throws()
+		{
+			// Arrange
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
+			var odataFilter = "Age eq null";
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
+		}
+
+		[TestMethod]
 		public void OrderBy_Empty()
 		{
 			// Arrange
