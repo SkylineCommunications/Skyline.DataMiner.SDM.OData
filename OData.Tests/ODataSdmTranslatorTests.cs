@@ -727,24 +727,27 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			act.Should().Throw<NotSupportedException>();
 		}
 
-		////Currently not possible due to limitation in DOM
-		////[TestMethod]
-		////public void OrderBy_Multiple_Properties()
-		////{
-		////	// Arrange
-		////	var expectedQuery = new TRUEFilterElement<Person>()
-		////		.ToQuery()
-		////		.OrderByDescending(PersonExposers.Age)
-		////		.ThenBy(PersonExposers.Name);
-		////	var orderBy = "Age desc, Name asc";
+		[TestMethod]
+		public void OrderBy_Multiple_Properties_Uses_Secondary_Sort()
+		{
+			// Arrange
+			var people = new List<Person>
+			{
+				new Person("Person 001", "Zed", 35),
+				new Person("Person 002", "Andi", 35),
+				new Person("Person 003", "Older", 40),
+			};
+			var orderBy = "Age desc, Name asc";
 
-		////	// Act
-		////	var translator = new ODataSdmTranslator<Person>();
-		////	var query = translator.TranslateOrderBy(orderBy);
+			// Act
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
+			var translator = new ODataSdmTranslator<Person>();
+			var query = translator.TranslateOrderBy(orderBy);
+			var result = query.ExecuteInMemory(people);
 
-		////	// Assert
-		////	query.Should().Be(expectedQuery, new QueryEqualityComparer<Person>());
-		////}
+			// Assert
+			result.Select(p => p.Name).Should().Equal("Older", "Andi", "Zed");
+		}
 
 		[TestMethod]
 		public void OrderBy_Multiple_Properties_ExecuteInMemory()

@@ -273,6 +273,11 @@ namespace Skyline.DataMiner.SDM.OData
 				_query = _query.WithOrder(
 					_query.Order.SingleConcat(OrderByElementFactory.Create(exposer!, sortOrder, false)));
 			}
+
+			if (node.Next is not null)
+			{
+				Visit(node.Next);
+			}
 		}
 	}
 }
