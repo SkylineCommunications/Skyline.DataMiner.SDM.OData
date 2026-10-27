@@ -757,6 +757,9 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 
 			// Assert
 			var methodCallNode = tree.Filter.As<MethodCallNode>();
+			methodCallNode.Target.Parent.Should().Be(methodCallNode);
+			methodCallNode.Variable.Parent.Should().Be(methodCallNode);
+			methodCallNode.Body.Parent.Should().Be(methodCallNode);
 			methodCallNode.Body.Should().BeOfType<OrNode>();
 			methodCallNode.Body.As<OrNode>().Nodes.Should().HaveCount(2);
 		}

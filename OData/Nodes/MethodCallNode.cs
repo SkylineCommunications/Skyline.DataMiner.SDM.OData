@@ -20,8 +20,8 @@ namespace Skyline.DataMiner.SDM.OData
 			: base(parent)
 		{
 			Name = methodName ?? throw new ArgumentNullException(nameof(methodName));
-			Target = target ?? throw new ArgumentNullException(nameof(target));
-			Variable = variable ?? throw new ArgumentNullException(nameof(variable));
+			Target = target?.WithParent(this) ?? throw new ArgumentNullException(nameof(target));
+			Variable = variable?.WithParent(this) ?? throw new ArgumentNullException(nameof(variable));
 			Body = body?.WithParentInternal(this) ?? throw new ArgumentNullException(nameof(body));
 		}
 
