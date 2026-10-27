@@ -285,6 +285,21 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		[DataRow("contains(Name)")]
+		[DataRow("contains(Name, 'Andi', 'Extra')")]
+		public void String_Contains_With_Invalid_Argument_Count_Throws(string odataFilter)
+		{
+			// Arrange
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
+		}
+
+		[TestMethod]
 		[DataRow(20)]
 		[DataRow(-5)]
 		[DataRow(0)]
@@ -404,6 +419,21 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		public void NonNullable_Number_Equal_Null_Throws()
+		{
+			// Arrange
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
+			var odataFilter = "Age eq null";
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
+		}
+
+		[TestMethod]
 		public void OrderBy_Empty()
 		{
 			// Arrange
@@ -413,6 +443,24 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			// Act
 			var translator = new ODataSdmTranslator<Person>();
 			var query = translator.TranslateOrderBy(orderBy);
+
+			// Assert
+			query.Should().Be(expectedQuery, new QueryEqualityComparer<Person>());
+		}
+
+		[TestMethod]
+		public void OrderBy_Reused_Translator_Does_Not_Retain_Previous_Order()
+		{
+			// Arrange
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
+			var expectedQuery = new TRUEFilterElement<Person>()
+				.ToQuery()
+				.OrderBy(PersonExposers.Name);
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			translator.TranslateOrderBy("Age desc");
+			var query = translator.TranslateOrderBy("Name");
 
 			// Assert
 			query.Should().Be(expectedQuery, new QueryEqualityComparer<Person>());
@@ -668,6 +716,24 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		[DataRow("Name")]
+		[DataRow("42")]
+		[DataRow("not Name")]
+		[DataRow("Name eq 'Andi Tamer' and Age")]
+		[DataRow("Name eq 'Andi Tamer' or Age")]
+		public void Incomplete_Filter_Expression_Throws(string odataFilter)
+		{
+			// Arrange
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			Action act = () => translator.TranslateFilter(odataFilter);
+
+			// Assert
+			act.Should().Throw<NotSupportedException>();
+		}
+
+		[TestMethod]
 		public void Comparing_Two_Properties_Throws()
 		{
 			// Arrange
@@ -709,24 +775,27 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 			act.Should().Throw<NotSupportedException>();
 		}
 
-		////Currently not possible due to limitation in DOM
-		////[TestMethod]
-		////public void OrderBy_Multiple_Properties()
-		////{
-		////	// Arrange
-		////	var expectedQuery = new TRUEFilterElement<Person>()
-		////		.ToQuery()
-		////		.OrderByDescending(PersonExposers.Age)
-		////		.ThenBy(PersonExposers.Name);
-		////	var orderBy = "Age desc, Name asc";
+		[TestMethod]
+		public void OrderBy_Multiple_Properties_Uses_Secondary_Sort()
+		{
+			// Arrange
+			var people = new List<Person>
+			{
+				new Person("Person 001", "Zed", 35),
+				new Person("Person 002", "Andi", 35),
+				new Person("Person 003", "Older", 40),
+			};
+			var orderBy = "Age desc, Name asc";
 
-		////	// Act
-		////	var translator = new ODataSdmTranslator<Person>();
-		////	var query = translator.TranslateOrderBy(orderBy);
+			// Act
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
+			var translator = new ODataSdmTranslator<Person>();
+			var query = translator.TranslateOrderBy(orderBy);
+			var result = query.ExecuteInMemory(people);
 
-		////	// Assert
-		////	query.Should().Be(expectedQuery, new QueryEqualityComparer<Person>());
-		////}
+			// Assert
+			result.Select(p => p.Name).Should().Equal("Older", "Andi", "Zed");
+		}
 
 		[TestMethod]
 		public void OrderBy_Multiple_Properties_ExecuteInMemory()

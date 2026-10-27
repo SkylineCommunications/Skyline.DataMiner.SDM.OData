@@ -58,6 +58,7 @@ namespace Skyline.DataMiner.SDM.OData
 		/// <exception cref="NotSupportedException">Thrown when the order-by expression contains an unsupported construct.</exception>
 		public IQuery<T> TranslateOrderBy(string orderBy)
 		{
+			_query = new TRUEFilterElement<T>().ToQuery();
 			var tree = ODataOrderByParser.Parse(orderBy);
 			Visit(tree);
 			return _query;
@@ -151,6 +152,11 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				case "contains":
 				{
+					if (node.Arguments.Count != 2)
+					{
+						throw new NotSupportedException("Function 'contains' expects exactly two arguments.");
+					}
+
 					if (!_resolver.TryResolve(node.Arguments[0], out var exposer) ||
 						!_resolver.TryGetLiteral(node.Arguments[1], out var literal))
 					{
@@ -197,6 +203,26 @@ namespace Skyline.DataMiner.SDM.OData
 					throw new NotSupportedException($"Method '{node.Name}' is not supported.");
 				}
 			}
+		}
+
+		/// <summary>
+		/// Rejects a property used as a complete filter expression.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when a property is not part of a supported predicate.</exception>
+		public override void VisitProperty(PropertyNode node)
+		{
+			throw new NotSupportedException($"Unsupported filter expression: '{node.Path}'");
+		}
+
+		/// <summary>
+		/// Rejects a literal used as a complete filter expression.
+		/// </summary>
+		/// <param name="node">The node to translate.</param>
+		/// <exception cref="NotSupportedException">Thrown when a literal is not part of a supported predicate.</exception>
+		public override void VisitLiteral(LiteralNode node)
+		{
+			throw new NotSupportedException("A literal cannot be used as a complete filter expression.");
 		}
 
 		/// <summary>
@@ -252,6 +278,11 @@ namespace Skyline.DataMiner.SDM.OData
 			{
 				_query = _query.WithOrder(
 					_query.Order.SingleConcat(OrderByElementFactory.Create(exposer!, sortOrder, false)));
+			}
+
+			if (node.Next is not null)
+			{
+				Visit(node.Next);
 			}
 		}
 	}
