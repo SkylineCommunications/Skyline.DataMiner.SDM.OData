@@ -25,6 +25,7 @@ override Skyline.DataMiner.SDM.OData.ODataWalker.VisitBinary(Skyline.DataMiner.S
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitFilter(Skyline.DataMiner.SDM.OData.FilterNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitFunctionCall(Skyline.DataMiner.SDM.OData.FunctionCallNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitMethodCall(Skyline.DataMiner.SDM.OData.MethodCallNode! node) -> void
+override Skyline.DataMiner.SDM.OData.ODataWalker.VisitNot(Skyline.DataMiner.SDM.OData.NotNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitOr(Skyline.DataMiner.SDM.OData.OrNode! node) -> void
 override Skyline.DataMiner.SDM.OData.ODataWalker.VisitOrder(Skyline.DataMiner.SDM.OData.OrderNode! node) -> void
 override Skyline.DataMiner.SDM.OData.OrderNode.Accept(Skyline.DataMiner.SDM.OData.IODataVisitor! visitor) -> void

@@ -57,6 +57,17 @@ namespace Skyline.DataMiner.SDM.OData
 		}
 
 		/// <summary>
+		/// Visits a NOT node and its child.
+		/// </summary>
+		/// <param name="node">The node to visit.</param>
+		public override void VisitNot(NotNode node)
+		{
+			DefaultVisit(node);
+
+			node.Child.Accept(this);
+		}
+
+		/// <summary>
 		/// Visits an order node and its continuation.
 		/// </summary>
 		/// <param name="node">The node to visit.</param>
@@ -64,6 +75,7 @@ namespace Skyline.DataMiner.SDM.OData
 		{
 			DefaultVisit(node);
 
+			node.Property.Accept(this);
 			node.Next?.Accept(this);
 		}
 
