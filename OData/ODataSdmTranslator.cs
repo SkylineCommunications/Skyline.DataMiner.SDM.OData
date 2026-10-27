@@ -58,6 +58,7 @@ namespace Skyline.DataMiner.SDM.OData
 		/// <exception cref="NotSupportedException">Thrown when the order-by expression contains an unsupported construct.</exception>
 		public IQuery<T> TranslateOrderBy(string orderBy)
 		{
+			_query = new TRUEFilterElement<T>().ToQuery();
 			var tree = ODataOrderByParser.Parse(orderBy);
 			Visit(tree);
 			return _query;

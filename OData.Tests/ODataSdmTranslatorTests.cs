@@ -449,6 +449,24 @@ namespace Skyline.DataMiner.SDM.OData.Tests
 		}
 
 		[TestMethod]
+		public void OrderBy_Reused_Translator_Does_Not_Retain_Previous_Order()
+		{
+			// Arrange
+			RuntimeHelpers.RunClassConstructor(typeof(PersonExposers).TypeHandle);
+			var expectedQuery = new TRUEFilterElement<Person>()
+				.ToQuery()
+				.OrderBy(PersonExposers.Name);
+			var translator = new ODataSdmTranslator<Person>();
+
+			// Act
+			translator.TranslateOrderBy("Age desc");
+			var query = translator.TranslateOrderBy("Name");
+
+			// Assert
+			query.Should().Be(expectedQuery, new QueryEqualityComparer<Person>());
+		}
+
+		[TestMethod]
 		public void OrderBy_ID()
 		{
 			// Arrange
